@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-export default function r_exames() {
+export default function r_exames_Pet() {
     const navigation = useNavigation();
 
     return (

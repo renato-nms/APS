@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-export default function r_consultas() {
+export default function r_consultas_Idoso() {
     const navigation = useNavigation();
 
     return (

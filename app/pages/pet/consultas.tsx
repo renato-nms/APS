@@ -2,12 +2,12 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-export default function Consultas() {
+export default function Consultas_Pet() {
     const navigation = useNavigation();
 
     return (
         <View>
-            <Text>Tela de consultas</Text>
+            <Text>Tela de consultas do pet</Text>
 
         </View>
     );

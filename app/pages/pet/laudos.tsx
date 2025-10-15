@@ -2,12 +2,12 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-export default function Laudos() {
+export default function Laudos_Pet() {
     const navigation = useNavigation();
 
     return (
         <View>
-            <Text>Tela de laudos</Text>
+            <Text>Tela de laudos do pet</Text>
         </View>
     );
 }
