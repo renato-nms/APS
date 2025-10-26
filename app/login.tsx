@@ -1,13 +1,33 @@
+// FRONT END
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
+
+// BACK END
+import { auth } from "./firebase/firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+
+  async function handleLogin() {
+    if (!email || !senha) {
+      Alert.alert("Erro", "Preencha o e-mail e a senha.");
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, senha);
+      Alert.alert("Sucesso", "Login realizado!");
+      router.push("/home"); // depois você troca pela tela principal
+    } catch (error: any) {
+      Alert.alert("Erro ao entrar", error.message);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -42,7 +62,7 @@ export default function Login() {
         </View>
 
         {/* Botão Entrar */}
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
 
@@ -57,10 +77,12 @@ export default function Login() {
             Não tem cadastro? <Text style={{ fontWeight: "bold" }}>Cadastre-se</Text>
           </Text>
         </TouchableOpacity>
+
       </LinearGradient>
     </View>
   );
 }
+// ESTILIZAÇÃO
 
 const styles = StyleSheet.create({
   container: {

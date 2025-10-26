@@ -1,6 +1,9 @@
+
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
+import { auth } from "./firebase/firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function Cadastro() {
   const router = useRouter();
@@ -9,6 +12,28 @@ export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
+  //BACK END
+
+  // Função chamada ao clicar no botão "cadastrar"
+  async function handleCadastro() {
+    if(!nome || !email || !senha) {
+      Alert.alert("Erro", "Preencha todos os campos");
+      return;
+    }
+    try {
+      // Aqui cria o usuario, quando os dados forem digitados
+      await createUserWithEmailAndPassword(auth, email, senha);
+
+      Alert.alert("Sucesso", "Usuário cadastrado");
+
+      router.push("/login");
+    } catch (error: any) {
+      //Se algo der errado, como dados ja usados
+      Alert.alert("Erro", error.message);
+    }
+  }
+
+    //FRONT END
   return (
     <View style={styles.container}>
 
@@ -41,7 +66,7 @@ export default function Cadastro() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.push("/login")}
+        onPress={handleCadastro}
       >
         <Text style={styles.buttonText}>Cadastrar</Text>
       </TouchableOpacity>
@@ -55,6 +80,8 @@ export default function Cadastro() {
   );
 }
 
+
+// ESTILIZAÇÃO
 const styles = StyleSheet.create({
   logo: {
     width: 150,
