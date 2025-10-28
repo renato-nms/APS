@@ -1,11 +1,11 @@
-// FRONT END
+// REACT NATIVE
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
 
-// BACK END
+// FIREBASE
 import { auth } from "./firebase/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
@@ -28,7 +28,7 @@ export default function Login() {
       Alert.alert("Erro ao entrar", error.message);
     }
   }
-
+  //FRONT END
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#E6F2FF", "#FFFFFF", "#E6FFE6"]} style={styles.card}>
@@ -40,7 +40,7 @@ export default function Login() {
 
         {/* Input de Login */}
         <View style={styles.inputContainer}>
-          <Ionicons name="mail-outline" size={20} color="#555" style={styles.icon} />
+          <Ionicons name="mail-outline" size={30} color="#555" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Login"
@@ -51,7 +51,7 @@ export default function Login() {
 
         {/* Input de Senha */}
         <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={20} color="#555" style={styles.icon} />
+          <Ionicons name="lock-closed-outline" size={30} color="#555" style={styles.icon} />
           <TextInput
             style={styles.input}
             placeholder="Senha"
@@ -67,7 +67,7 @@ export default function Login() {
         </TouchableOpacity>
 
         {/* Esqueci senha */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => Alert.alert("Funcionalidade ainda não implantada")}>
           <Text style={styles.forgot}>Esqueci minha senha</Text>
         </TouchableOpacity>
 
@@ -101,29 +101,29 @@ const styles = StyleSheet.create({
   paddingTop: 60,
   },
   logo: {
-    width: 180,
-    height: 80,
+    width: 353,
+    height: 134,
     resizeMode: "contain",
     marginBottom: 25,
   },
   title: {
-    fontSize: 18,
+    fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#0A2C5E",
+    color: "#142850",
     marginBottom: 5,
   },
   subtitle: {
-    fontSize: 13,
+    fontSize: 20,
     textAlign: "center",
     color: "#0A2C5E",
     marginBottom: 25,
   },
   inputContainer: {
     width: "100%",
-    height: 50,
+    height: 70,
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 15,
@@ -133,14 +133,17 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 8,
+    width: 33,
+    height: 25
   },
   input: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 24,
   },
   button: {
-    width: "100%",
-    backgroundColor: "#0A2C5E",
+    width: 353,
+    height: 86,
+    backgroundColor: "#072441",
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: "center",
@@ -149,16 +152,19 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 36,
     fontWeight: "bold",
+    borderRadius: 60,
   },
   forgot: {
-    color: "#0A2C5E",
-    fontSize: 14,
+     fontSize: 24,
+    color: "#142850",
+    fontWeight: "bold",
     marginBottom: 15,
   },
   register: {
-    fontSize: 14,
-    color: "#0A2C5E",
+    fontSize: 24,
+    color: "#072441",
+    fontWeight: "semibold",
   },
 });

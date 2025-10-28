@@ -2,8 +2,12 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
+// Firebase
 import { auth } from "./firebase/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "./firebase/firebaseConfig";
+
 
 export default function Cadastro() {
   const router = useRouter();
@@ -11,18 +15,29 @@ export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [sexo, setSexo] = useState("");
   //BACK END
 
   // Função chamada ao clicar no botão "cadastrar"
   async function handleCadastro() {
-    if(!nome || !email || !senha) {
+    if(!nome || !email || !senha || !dataNascimento || !sexo) {
       Alert.alert("Erro", "Preencha todos os campos");
       return;
     }
     try {
       // Aqui cria o usuario, quando os dados forem digitados
-      await createUserWithEmailAndPassword(auth, email, senha);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+
+      const uid = userCredential.user.uid;
+      //Pega o uid unico do usuario criado
+
+      await setDoc(doc(db, "users", uid), {
+        nome: nome,
+        dataNascimento: dataNascimento,
+        sexo: sexo,
+        email: email,
+      });
 
       Alert.alert("Sucesso", "Usuário cadastrado");
 
@@ -36,7 +51,7 @@ export default function Cadastro() {
     //FRONT END
   return (
     <View style={styles.container}>
-
+      
       <Image source={require("../assets/images/logo.png")} style={styles.logo} />
       <Text style={styles.title}>Insira seus dados</Text>
 
@@ -45,6 +60,20 @@ export default function Cadastro() {
         placeholder="Nome completo"
         value={nome}
         onChangeText={setNome}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Data de nascimento (DD/MM/AAAA)"
+        value={dataNascimento}
+        onChangeText={setDataNascimento}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Sexo"
+        value={sexo}
+        onChangeText={setSexo}
       />
 
       <TextInput
@@ -84,8 +113,8 @@ export default function Cadastro() {
 // ESTILIZAÇÃO
 const styles = StyleSheet.create({
   logo: {
-    width: 150,
-    height: 150,
+    width: 400,
+    height: 400,
     marginBottom: 20,
     resizeMode: "contain",
   },
