@@ -1,14 +1,25 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 
 export default function HomeLider() {
+  const router = useRouter();
+  
   return (
     <View style={styles.container}>
       {/* Perfil */}
+      <Text style={styles.title}>Home do Líder</Text>
+      
+      {/* Link para cadastrar membro - CORRIGIDO */}
+      <TouchableOpacity 
+        style={styles.linkContainer} 
+        onPress={() => router.push("/cadastro_membro")}
+      >
+        <Text style={styles.link}>Deseja cadastrar membro? Clique aqui!</Text>
+      </TouchableOpacity>
 
-      {/* Botões */}
+      {/* Botões 
       <TouchableOpacity style={[styles.card, { backgroundColor: "#C3F8E4" }]}>
         <Ionicons name="microscope-outline" size={40} color="#0A2C5E" />
         <Text style={styles.textCard}>Exames</Text>
@@ -28,7 +39,8 @@ export default function HomeLider() {
         <Ionicons name="calendar-outline" size={40} color="#0A2C5E" />
         <Text style={styles.textCard}>Consultas</Text>
       </TouchableOpacity>
-
+      */}
+      
       {/* Barra inferior */}
       <View style={styles.navbar}>
         <TouchableOpacity style={styles.navItem}>
@@ -41,10 +53,10 @@ export default function HomeLider() {
           <Text style={styles.navText}>Família</Text>
         </TouchableOpacity>
 
-  <TouchableOpacity style={styles.navItem}>
-    <Ionicons name="person-circle" size={28} color="#0A2C5E" />
-    <Text style={styles.navText}>Perfil</Text>
-  </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="person-circle" size={28} color="#0A2C5E" />
+          <Text style={styles.navText}>Perfil</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -110,5 +122,21 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 14,
     color: "#0A2C5E",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  linkContainer: {
+    padding: 15,
+    backgroundColor: "#E6F2FF",
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  link: {
+    fontSize: 16,
+    color: "#0A2C5E",
+    fontWeight: "bold",
   },
 });

@@ -1,6 +1,17 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
+import { 
+    Image, 
+    StyleSheet, 
+    Text, 
+    TextInput, 
+    TouchableOpacity, 
+    View, 
+    Alert,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform 
+} from "react-native";
 import { auth, db } from "./firebase/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -30,6 +41,7 @@ export default function CadastroLider() {
         sexo,
         email,
         uid,
+        tipoUsuario: "lider", // CAMPO ESSENCIAL ADICIONADO
         criadoEm: new Date(),
       });
 
@@ -41,38 +53,88 @@ export default function CadastroLider() {
   }
 
   return (
-    <View style={styles.container}>
-      <Image source={require("../assets/images/logo.png")} style={styles.logo} />
-      <Text style={styles.title}>Cadastro de Líder</Text>
+    <KeyboardAvoidingView 
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView 
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <Image source={require("../assets/images/logo.png")} style={styles.logo} />
+        <Text style={styles.title}>Cadastro de Líder</Text>
+        
+        <View style={styles.formContainer}>
+          <TextInput 
+            style={styles.input} 
+            placeholder="Nome completo" 
+            value={nome} 
+            onChangeText={setNome} 
+          />
+          <TextInput 
+            style={styles.input} 
+            placeholder="Data de nascimento (DD/MM/AAAA)" 
+            value={dataNascimento} 
+            onChangeText={setDataNascimento} 
+          />
+          <TextInput 
+            style={styles.input} 
+            placeholder="Sexo" 
+            value={sexo} 
+            onChangeText={setSexo} 
+          />
+          <TextInput 
+            style={styles.input} 
+            placeholder="E-mail" 
+            value={email} 
+            onChangeText={setEmail} 
+            keyboardType="email-address" 
+            autoCapitalize="none" 
+          />
+          <TextInput 
+            style={styles.input} 
+            placeholder="Senha" 
+            value={senha} 
+            onChangeText={setSenha} 
+            secureTextEntry 
+          />
+        </View>
 
-      <TextInput style={styles.input} placeholder="Nome completo" value={nome} onChangeText={setNome} />
-      <TextInput style={styles.input} placeholder="Data de nascimento (DD/MM/AAAA)" value={dataNascimento} onChangeText={setDataNascimento} />
-      <TextInput style={styles.input} placeholder="Sexo" value={sexo} onChangeText={setSexo} />
-      <TextInput style={styles.input} placeholder="E-mail" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
-      <TextInput style={styles.input} placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry />
-
-      <TouchableOpacity style={styles.button} onPress={handleCadastro}>
-        <Text style={styles.buttonText}>Cadastrar</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.button} onPress={handleCadastro}>
+          <Text style={styles.buttonText}>Cadastrar</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { 
     flex: 1,
-    justifyContent: "center", 
+    backgroundColor: "#f5f5f5",
+  },
+  scrollContainer: {
+    flexGrow: 1,
     alignItems: "center", 
-    padding: 20, 
-    backgroundColor: "#f5f5f5" 
+    padding: 20,
+    paddingTop: 40,
   },
   logo: { 
-    width: 400, 
-    height: 400, 
-    resizeMode: "contain" 
+    width: 250,
+    height: 250,
+    resizeMode: "contain",
+    marginBottom: 10,
   },
   title: { 
-    fontSize: 28, fontWeight: "bold", marginBottom: 20 },
+    fontSize: 28, 
+    fontWeight: "bold", 
+    marginBottom: 30,
+    textAlign: "center",
+  },
+  formContainer: {
+    width: "100%",
+    marginBottom: 20,
+  },
   input: { 
     width: "100%", 
     height: 50, 
@@ -88,7 +150,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#0A2C5E", 
     paddingVertical: 14, 
     borderRadius: 10, 
-    alignItems: "center" 
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom: 20,
   },
   buttonText: { 
     color: "#fff", 
