@@ -19,15 +19,15 @@ export default function Home() {
         <Text style={styles.buttonText}>Lider</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push("/loginCrianca")}>
         <Text style={styles.buttonText}>Criança</Text>
       </TouchableOpacity>
 
-         <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push("/loginPet")}>
         <Text style={styles.buttonText}>Pet</Text>
       </TouchableOpacity>
 
-         <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push("/loginIdoso")}>
         <Text style={styles.buttonText}>Idoso</Text>
       </TouchableOpacity>
     </View>

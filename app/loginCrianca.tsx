@@ -1,11 +1,13 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "./firebase/firebaseConfig";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, Image, StyleSheet } from "react-native";
+// REACT NATIVE
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
+
+// FIREBASE
+import { auth } from "./firebase/firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
   const router = useRouter();
@@ -19,50 +21,34 @@ export default function Login() {
     }
 
     try {
-      // Login com Auth
-      const userCredential = await signInWithEmailAndPassword(auth, email, senha);
-      const uid = userCredential.user.uid;
-
-      // Busca tipoUsuario no Firestore
-      const userDoc = await getDoc(doc(db, "lider", uid));
-
-      if (!userDoc.exists()) {
-        Alert.alert("Erro", "Usuário não encontrado no banco de dados.");
-        return;
-      }
-
-      const userData = userDoc.data();
-
-      if (userData.tipoUsuario === "lider") {
-        Alert.alert("Sucesso", "Bem-vindo, líder!");
-        router.push("/home"); // Tela do líder (pode conter botão de cadastrar membros)
-      } else {
-        Alert.alert("Acesso negado", "Somente líderes podem acessar este login.");
-      }
-
+      await signInWithEmailAndPassword(auth, email, senha);
+      Alert.alert("Sucesso", "Login realizado!");
+      router.push("/homeCrianca"); // depois você troca pela tela principal
     } catch (error: any) {
       Alert.alert("Erro ao entrar", error.message);
     }
   }
-
+  //FRONT END
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#E6F2FF", "#FFFFFF", "#E6FFE6"]} style={styles.card}>
+
         <Image source={require("../assets/images/logo.png")} style={styles.logo} />
-
-        <Text style={styles.title}>Bem-vindo à Caderneta Digital da Família</Text>
-        <Text style={styles.subtitle}>Organize a saúde da sua família com facilidade</Text>
-
+        <Text style={styles.title}>
+            Insira o e-mail e a senha da criança!
+        </Text>
+        {/* Input de Login */}
         <View style={styles.inputContainer}>
           <Ionicons name="mail-outline" size={30} color="#555" style={styles.icon} />
           <TextInput
             style={styles.input}
-            placeholder="E-mail"
+            placeholder="Login"
             value={email}
             onChangeText={setEmail}
           />
         </View>
 
+        {/* Input de Senha */}
         <View style={styles.inputContainer}>
           <Ionicons name="lock-closed-outline" size={30} color="#555" style={styles.icon} />
           <TextInput
@@ -74,20 +60,15 @@ export default function Login() {
           />
         </View>
 
+        {/* Botão Entrar */}
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push("/cadastro")}>
-          <Text style={styles.register}>
-            Não tem cadastro? <Text style={{ fontWeight: "bold" }}>Cadastre-se</Text>
-          </Text>
-        </TouchableOpacity>
       </LinearGradient>
     </View>
   );
 }
-
 // ESTILIZAÇÃO
 
 const styles = StyleSheet.create({
