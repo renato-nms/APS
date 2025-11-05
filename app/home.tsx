@@ -1,46 +1,61 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router, useRouter } from "expo-router";
-
-export default function HomeLider() {
+import { useRouter } from "expo-router";
+export default function Home() {
   const router = useRouter();
-  
+  const handleButtonPress = (buttonName: string) => {
+    Alert.alert("Funcionalidade não implementada", `${buttonName} - Funcionalidade ainda não aplicada`);
+  };
+
   return (
+    
     <View style={styles.container}>
-      {/* Perfil */}
-      <Text style={styles.title}>Home do Líder</Text>
+      <StatusBar backgroundColor="#0A2C5E" barStyle="light-content" />
       
-      {/* Link para cadastrar membro - CORRIGIDO */}
-      <TouchableOpacity 
-        style={styles.linkContainer} 
-        onPress={() => router.push("/cadastro_membro")}
-      >
-        <Text style={styles.link}>Deseja cadastrar membro? Clique aqui!</Text>
-      </TouchableOpacity>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>CADERNETA</Text>
+        <Text style={styles.headerSubtitle}>DIGITAL DE FAMÍLIA</Text>
+      </View>
 
-      {/* Botões 
-      <TouchableOpacity style={[styles.card, { backgroundColor: "#C3F8E4" }]}>
-        <Ionicons name="microscope-outline" size={40} color="#0A2C5E" />
-        <Text style={styles.textCard}>Exames</Text>
-      </TouchableOpacity>
+      {/* Saudação */}
+      <View style={styles.greetingContainer}>
+        <Text style={styles.greeting}>Olá, João</Text>
+        <Text style={styles.subGreeting}>cuide da saúde da sua família aqui</Text>
+      </View>
 
-      <TouchableOpacity style={[styles.card, { backgroundColor: "#C8E5FF" }]}>
-        <Ionicons name="medkit-outline" size={40} color="#0A2C5E" />
-        <Text style={styles.textCard}>Vacinas</Text>
-      </TouchableOpacity>
+      {/* Grid de Botões */}
+      <View style={styles.buttonsGrid}>
+        <TouchableOpacity 
+          style={[styles.button, styles.examesButton]} 
+          onPress={() => handleButtonPress("Exames")}
+        >
+          <Text style={styles.buttonText}>Exames</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.card, { backgroundColor: "#E6D7FF" }]}>
-        <Ionicons name="heart-outline" size={40} color="#0A2C5E" />
-        <Text style={styles.textCard}>Laudos</Text>
-      </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.button, styles.vacinasButton]} 
+          onPress={() => handleButtonPress("Vacinas")}
+        >
+          <Text style={styles.buttonText}>Vacinas</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.card, { backgroundColor: "#FFF5C3" }]}>
-        <Ionicons name="calendar-outline" size={40} color="#0A2C5E" />
-        <Text style={styles.textCard}>Consultas</Text>
-      </TouchableOpacity>
-      */}
-      
+        <TouchableOpacity 
+          style={[styles.button, styles.remediosButton]} 
+          onPress={() => handleButtonPress("Remédios")}
+        >
+          <Text style={styles.buttonText}>Remédios</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.button, styles.consultasButton]} 
+          onPress={() => handleButtonPress("Consultas")}
+        >
+          <Text style={styles.buttonText}>Consultas</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Barra inferior */}
       <View style={styles.navbar}>
         <TouchableOpacity style={styles.navItem}>
@@ -48,7 +63,7 @@ export default function HomeLider() {
           <Text style={styles.navText}>Início</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/homeFamilia')}>
           <Ionicons name="people" size={28} color="#0A2C5E" />
           <Text style={styles.navText}>Família</Text>
         </TouchableOpacity>
@@ -65,45 +80,95 @@ export default function HomeLider() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     backgroundColor: "#FFFFFF",
-    paddingTop: 50,
   },
-  perfil: {
-    width: 120,
+  header: {
+    backgroundColor: "#0A2C5E",
+    paddingTop: 60,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    alignItems: "center",
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    letterSpacing: 2,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    letterSpacing: 1,
+    marginTop: 2,
+  },
+  greetingContainer: {
+    padding: 20,
+    alignItems: "center",
+  },
+  greeting: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#0A2C5E",
+    marginBottom: 5,
+  },
+  subGreeting: {
+    fontSize: 16,
+    color: "#666666",
+    textAlign: "center",
+  },
+  buttonsGrid: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    padding: 10,
+    justifyContent: "space-between",
+  },
+  button: {
+    width: "48%",
     height: 120,
-    borderRadius: 60,
-    marginBottom: 10,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
-  nome: {
+  examesButton: {
+    backgroundColor: "#E6F2FF", // Azul claro
+  },
+  vacinasButton: {
+    backgroundColor: "#E6FFE6", // Verde claro
+  },
+  remediosButton: {
+    backgroundColor: "#FFF5E6", // Laranja claro
+  },
+  consultasButton: {
+    backgroundColor: "#F2E6FF", // Roxo claro
+  },
+  buttonText: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#0A2C5E",
   },
-  cargo: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 30,
-  },
-  card: {
-    width: "80%",
-    height: 90,
-    borderRadius: 20,
-    marginBottom: 20,
-    flexDirection: "row",
+  footer: {
+    backgroundColor: "#F5F5F5",
+    padding: 15,
     alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    borderTopWidth: 1,
+    borderTopColor: "#DDDDDD",
   },
-  textCard: {
-    fontSize: 24,
+  footerText: {
+    fontSize: 16,
+    color: "#666666",
     fontWeight: "bold",
-    color: "#0A2C5E",
   },
+  	
   navbar: {
     position: "absolute",
     bottom: 0,
@@ -122,21 +187,5 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 14,
     color: "#0A2C5E",
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  linkContainer: {
-    padding: 15,
-    backgroundColor: "#E6F2FF",
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  link: {
-    fontSize: 16,
-    color: "#0A2C5E",
-    fontWeight: "bold",
   },
 });

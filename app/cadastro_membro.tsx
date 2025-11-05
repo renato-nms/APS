@@ -60,12 +60,24 @@ export default function CadastroMembro() {
       <Image source={require("../assets/images/logo.png")} style={styles.logo} />
       <Text style={styles.title}>Cadastrar Membro</Text>
 
-      <TextInput style={styles.input} placeholder="Nome completo" value={nome} onChangeText={setNome} />
-      <TextInput style={styles.input} placeholder="E-mail" value={email} onChangeText={setEmail} />
-      <TextInput style={styles.input} placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry />
-      <TextInput style={styles.input} placeholder="Data de nascimento" value={dataNascimento} onChangeText={setDataNascimento} />
-      <TextInput style={styles.input} placeholder="Sexo" value={sexo} onChangeText={setSexo} />
-      <TextInput style={styles.input} placeholder="Tipo (crianca, idoso, pet)" value={tipoUsuario} onChangeText={setTipoUsuario} />
+      <TextInput 
+      style={styles.input} 
+      placeholder="Nome completo" value={nome} onChangeText={setNome} />
+      <TextInput 
+      style={styles.input} 
+      placeholder="E-mail" value={email} onChangeText={setEmail} />
+      <TextInput 
+      style={styles.input} 
+      placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry />
+      <TextInput 
+      style={styles.input} 
+      placeholder="Data de nascimento" value={dataNascimento} onChangeText={setDataNascimento} />
+      <TextInput 
+      style={styles.input} 
+      placeholder="Sexo" value={sexo} onChangeText={setSexo} />
+      <TextInput 
+      style={styles.input} 
+      placeholder="Tipo (crianca, idoso, pet)" value={tipoUsuario} onChangeText={setTipoUsuario} />
 
       <TouchableOpacity style={styles.button} onPress={handleCadastro}>
         <Text style={styles.buttonText}>Cadastrar</Text>
