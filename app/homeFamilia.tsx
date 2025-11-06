@@ -1,24 +1,36 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Alert, ImageBackground, Image } from "react-native";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function SuaFamilia() {
   const router = useRouter();
 
   return (
+    <ImageBackground
+      source={require("../assets/images/fundo_home.png")}
+      style={styles.background}
+      >
     <View style={styles.container}>
-      <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
-      
+      <Image
+      source={require("../assets/images/logo.png")}
+      style={styles.logo}
+      />
+
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Sua Família</Text>
-        <Text style={styles.headerSubtitle}>
+      <View>
+        <Text style={styles.Title}>Sua Família</Text>
+        <Text style={styles.Subtitle}>
           Adicione os membros da sua família para organizar a saúde de todos
         </Text>
       </View>
 
       {/* Conteúdo Central */}
       <View style={styles.content}>
+        <Image
+          source={require("../assets/images/familia.png")}
+          style={styles.familiaImage}
+        />
         <View style={styles.emptyState}>
           <Text style={styles.emptyStateText}>
             Sua família ainda não possui membros cadastrados
@@ -28,41 +40,70 @@ export default function SuaFamilia() {
         {/* Botão Adicionar Membro */}
         <TouchableOpacity 
           style={styles.addButton}
-          onPress={() => router.push("/")}
+          onPress={() => router.push("/tipomembro")}
         >
           <Text style={styles.addButtonIcon}>+</Text>
           <Text style={styles.addButtonText}>Adicionar membro</Text>
         </TouchableOpacity>
       </View>
+      
+      {/* Barra inferior */}
+      <View style={styles.navbar}>
+        <TouchableOpacity 
+        style={styles.navItem}
+        onPress = {() => router.push("/home")}>
+          <Ionicons name="home" size={28} color="#0A2C5E" />
+          <Text style={styles.navText}>Início</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="people" size={28} color="#00ff55" />
+          <Text style={styles.navText}>Família</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="person-circle" size={28} color="#0A2C5E" />
+          <Text style={styles.navText}>Perfil</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "transparent",
   },
-  header: {
-    paddingTop: 60,
-    paddingBottom: 30,
-    paddingHorizontal: 20,
-    backgroundColor: "#FFFFFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
+   background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
-  headerTitle: {
-    fontSize: 28,
+  logo: {
+    width: 246,
+    height: 94,
+    marginTop: 24,
+    resizeMode: "contain",
+    alignSelf: "center",
+  },
+  familiaImage: {
+    resizeMode: "contain",
+    alignContent: "center",
+  },
+  Title: {
+    fontSize: 32,
     fontWeight: "bold",
-    color: "#0A2C5E",
+    color: "#142850",
     marginBottom: 8,
     textAlign: "center",
   },
-  headerSubtitle: {
-    fontSize: 16,
-    color: "#666666",
+  Subtitle: {
+    color: "#142850",
+    fontSize: 25,
     textAlign: "center",
-    lineHeight: 22,
   },
   content: {
     flex: 1,
@@ -108,5 +149,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#FFFFFF",
     fontWeight: "bold",
+  },
+  
+  navbar: {
+    position: "absolute",
+    bottom: 0,
+    height: 70,
+    backgroundColor: "#E6F2FF",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "100%",
+    borderTopWidth: 1,
+    borderColor: "#ccc",
+  },
+  navItem: {
+    alignItems: "center",
+  },
+  navText: {
+    fontSize: 14,
+    color: "#0A2C5E",
   },
 });

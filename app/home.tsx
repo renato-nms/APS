@@ -1,135 +1,161 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Alert } from "react-native";
+import { 
+  View, 
+  Text, 
+  TouchableOpacity, 
+  StyleSheet, 
+  Alert, 
+  Image, 
+  ScrollView,
+  SafeAreaView,
+  ImageBackground,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+
 export default function Home() {
   const router = useRouter();
+  
   const handleButtonPress = (buttonName: string) => {
     Alert.alert("Funcionalidade não implementada", `${buttonName} - Funcionalidade ainda não aplicada`);
   };
 
   return (
-    
-    <View style={styles.container}>
-      <StatusBar backgroundColor="#0A2C5E" barStyle="light-content" />
-      
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>CADERNETA</Text>
-        <Text style={styles.headerSubtitle}>DIGITAL DE FAMÍLIA</Text>
-      </View>
+    <ImageBackground 
+      source={require("../assets/images/fundo_home.png")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <Image source={require("../assets/images/logo.png")} style={styles.logo} />
 
-      {/* Saudação */}
-      <View style={styles.greetingContainer}>
-        <Text style={styles.greeting}>Olá, João</Text>
-        <Text style={styles.subGreeting}>cuide da saúde da sua família aqui</Text>
-      </View>
+          {/* Saudação */}
+          <View style={styles.greetingContainer}>
+            <Text style={styles.headerTitle}>Olá! cuide da saúde da sua família aqui</Text>
+          </View>
 
-      {/* Grid de Botões */}
-      <View style={styles.buttonsGrid}>
-        <TouchableOpacity 
-          style={[styles.button, styles.examesButton]} 
-          onPress={() => handleButtonPress("Exames")}
-        >
-          <Text style={styles.buttonText}>Exames</Text>
-        </TouchableOpacity>
+          {/* Conteúdo com Scroll */}
+          <ScrollView 
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Grid de Botões */}
+            <View style={styles.buttonsGrid}>
+              <TouchableOpacity 
+                style={[styles.button, styles.examesButton]} 
+                onPress={() => handleButtonPress("Exames")}
+              >
+                <Text style={styles.buttonText}>Exames</Text>
+              </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={[styles.button, styles.vacinasButton]} 
-          onPress={() => handleButtonPress("Vacinas")}
-        >
-          <Text style={styles.buttonText}>Vacinas</Text>
-        </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.button, styles.vacinasButton]} 
+                onPress={() => handleButtonPress("Vacinas")}
+              >
+                <Text style={styles.buttonText}>Vacinas</Text>
+              </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={[styles.button, styles.remediosButton]} 
-          onPress={() => handleButtonPress("Remédios")}
-        >
-          <Text style={styles.buttonText}>Remédios</Text>
-        </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.button, styles.remediosButton]} 
+                onPress={() => handleButtonPress("Remédios")}
+              >
+                <Text style={styles.buttonText}>Remédios</Text>
+              </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={[styles.button, styles.consultasButton]} 
-          onPress={() => handleButtonPress("Consultas")}
-        >
-          <Text style={styles.buttonText}>Consultas</Text>
-        </TouchableOpacity>
-      </View>
+              <TouchableOpacity 
+                style={[styles.button, styles.consultasButton]} 
+                onPress={() => handleButtonPress("Consultas")}
+              >
+                <Text style={styles.buttonText}>Consultas</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
 
-      {/* Barra inferior */}
-      <View style={styles.navbar}>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="home" size={28} color="#0A2C5E" />
-          <Text style={styles.navText}>Início</Text>
-        </TouchableOpacity>
+          {/* Barra inferior FIXA */}
+          <View style={styles.navbar}>
+            <TouchableOpacity style={styles.navItem}>
+              <Ionicons name="home" size={28} color="#00ff55" />
+              <Text style={styles.navText}>Início</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push('/homeFamilia')}>
-          <Ionicons name="people" size={28} color="#0A2C5E" />
-          <Text style={styles.navText}>Família</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.navItem} onPress={() => router.push('/homeFamilia')}>
+              <Ionicons name="people" size={28} color="#0A2C5E" />
+              <Text style={styles.navText}>Família</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="person-circle" size={28} color="#0A2C5E" />
-          <Text style={styles.navText}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <TouchableOpacity style={styles.navItem}>
+              <Ionicons name="person-circle" size={28} color="#0A2C5E" />
+              <Text style={styles.navText}>Perfil</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: 'transparent', // ← TRANSPARENTE
+  },
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: 'transparent', // ← TRANSPARENTE
   },
-  header: {
-    backgroundColor: "#0A2C5E",
-    paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    alignItems: "center",
+  scrollView: {
+    flex: 1,
+    backgroundColor: 'transparent', // ← TRANSPARENTE
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 80,
+    backgroundColor: 'transparent', // ← TRANSPARENTE
+  },
+  logo: {
+    width: 246,
+    height: 94,
+    marginTop: 24,
+    resizeMode: "contain",
+    alignSelf: "center",
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: "bold",
-    color: "#FFFFFF",
-    letterSpacing: 2,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    color: "#FFFFFF",
+    color: "#142850",
     letterSpacing: 1,
-    marginTop: 2,
+    textAlign: "center",
+    marginTop: 10,
+    paddingHorizontal: 10,
   },
   greetingContainer: {
-    padding: 20,
+    padding: 15,
     alignItems: "center",
-  },
-  greeting: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#0A2C5E",
-    marginBottom: 5,
-  },
-  subGreeting: {
-    fontSize: 16,
-    color: "#666666",
-    textAlign: "center",
+    backgroundColor: 'transparent', // ← TRANSPARENTE
   },
   buttonsGrid: {
-    flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    padding: 10,
-    justifyContent: "space-between",
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginTop: 10,
+    marginBottom: 20,
+    backgroundColor: 'transparent', // ← TRANSPARENTE
   },
   button: {
-    width: "48%",
-    height: 120,
-    borderRadius: 15,
+    width: "100%",
+    maxWidth: 354,
+    height: 100,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -140,38 +166,24 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   examesButton: {
-    backgroundColor: "#E6F2FF", // Azul claro
+    backgroundColor: "#B8FDDE",
   },
   vacinasButton: {
-    backgroundColor: "#E6FFE6", // Verde claro
+    backgroundColor: "#BFF5FF",
   },
   remediosButton: {
-    backgroundColor: "#FFF5E6", // Laranja claro
+    backgroundColor: "#EEDEFE",
   },
   consultasButton: {
-    backgroundColor: "#F2E6FF", // Roxo claro
+    backgroundColor: "#FFFDBE",
   },
   buttonText: {
-    fontSize: 20,
+    fontSize: 35,
     fontWeight: "bold",
     color: "#0A2C5E",
+    left: 40
   },
-  footer: {
-    backgroundColor: "#F5F5F5",
-    padding: 15,
-    alignItems: "center",
-    borderTopWidth: 1,
-    borderTopColor: "#DDDDDD",
-  },
-  footerText: {
-    fontSize: 16,
-    color: "#666666",
-    fontWeight: "bold",
-  },
-  	
   navbar: {
-    position: "absolute",
-    bottom: 0,
     height: 70,
     backgroundColor: "#E6F2FF",
     flexDirection: "row",
