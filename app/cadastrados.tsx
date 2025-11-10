@@ -160,46 +160,88 @@ export default function Cadastrados() {
     }
   };
 
-  // Confirmação antes de deletar
-  const handleDeleteMembro = (membroId: string, membroNome: string) => {
-    Alert.alert(
-      "Confirmar Exclusão",
-      `Tem certeza que deseja excluir ${membroNome}?`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Excluir",
-          style: "destructive",
-          onPress: () => deleteMembro(membroId)
-        }
-      ]
-    );
-  };
+  // 🔥🔥🔥 FUNÇÃO DE EXCLUSÃO DIRETA COM DIAGNÓSTICO COMPLETO
+  const deletarMembroDireto = async (membroId: string, membroNome: string) => {
+    console.log("🟡 INICIANDO EXCLUSÃO DIRETA");
+    console.log("ID:", membroId);
+    console.log("Nome:", membroNome);
+    console.log("Aba ativa:", activeTab);
+    console.log("Coleção:", getCollectionName());
 
-  // Deletar membro
-  const deleteMembro = async (membroId: string) => {
     try {
-      const collectionName = getCollectionName();
-      const membroDocRef = doc(db, collectionName, membroId);
-      await deleteDoc(membroDocRef);
+      // 1. VALIDAR DADOS
+      if (!membroId || membroId.trim() === "") {
+        console.log("🔴 ERRO: ID vazio ou inválido");
+        Alert.alert("Erro", "ID do membro inválido");
+        return;
+      }
 
-      // Atualizar lista local baseado na aba ativa
+      const collectionName = getCollectionName();
+      if (!collectionName) {
+        console.log("🔴 ERRO: Nome da coleção inválido");
+        Alert.alert("Erro", "Tipo de membro inválido");
+        return;
+      }
+
+      // 2. CRIAR REFERÊNCIA
+      console.log(`📁 Criando referência: ${collectionName}/${membroId}`);
+      const membroDocRef = doc(db, collectionName, membroId);
+      console.log("✅ Referência criada:", membroDocRef.path);
+
+      // 3. EXECUTAR EXCLUSÃO
+      console.log("🗑️ Executando deleteDoc...");
+      await deleteDoc(membroDocRef);
+      console.log("✅ Documento excluído com sucesso no Firebase!");
+
+      // 4. ATUALIZAR ESTADO LOCAL
+      console.log("🔄 Atualizando estado local...");
       switch (activeTab) {
         case "pets":
-          setPets(prev => prev.filter(membro => membro.id !== membroId));
+          setPets(prev => {
+            const novosPets = prev.filter(membro => membro.id !== membroId);
+            console.log(`📊 Pets atualizados: ${novosPets.length} restantes`);
+            return novosPets;
+          });
           break;
         case "criancas":
-          setCriancas(prev => prev.filter(membro => membro.id !== membroId));
+          setCriancas(prev => {
+            const novasCriancas = prev.filter(membro => membro.id !== membroId);
+            console.log(`📊 Crianças atualizadas: ${novasCriancas.length} restantes`);
+            return novasCriancas;
+          });
           break;
         case "idosos":
-          setIdosos(prev => prev.filter(membro => membro.id !== membroId));
+          setIdosos(prev => {
+            const novosIdosos = prev.filter(membro => membro.id !== membroId);
+            console.log(`📊 Idosos atualizados: ${novosIdosos.length} restantes`);
+            return novosIdosos;
+          });
           break;
       }
 
-      Alert.alert("Sucesso", "Membro excluído com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir membro:", error);
-      Alert.alert("Erro", "Não foi possível excluir o membro");
+      // 5. FEEDBACK POSITIVO
+      Alert.alert("Sucesso", `${membroNome} excluído com sucesso!`);
+
+    } catch (error: any) {
+      // 6. TRATAMENTO DETALHADO DE ERRO
+      console.error("🔴 ERRO COMPLETO NA EXCLUSÃO:", error);
+      console.log("🔴 Código do erro:", error.code);
+      console.log("🔴 Mensagem do erro:", error.message);
+      console.log("🔴 Stack:", error.stack);
+
+      let mensagemErro = "Erro desconhecido";
+      
+      if (error.code === 'permission-denied') {
+        mensagemErro = "Sem permissão para excluir. Verifique as regras do Firebase.";
+      } else if (error.code === 'not-found') {
+        mensagemErro = "Documento não encontrado. Pode já ter sido excluído.";
+      } else if (error.code === 'invalid-argument') {
+        mensagemErro = "ID do documento inválido.";
+      } else {
+        mensagemErro = error.message || "Erro ao conectar com o Firebase";
+      }
+
+      Alert.alert("Erro na Exclusão", mensagemErro);
     }
   };
 
@@ -355,7 +397,7 @@ export default function Cadastrados() {
                   <View style={styles.actions}>
                     <TouchableOpacity
                       style={[styles.actionButton, styles.deleteButton]}
-                      onPress={() => handleDeleteMembro(membro.id, membro.nomeCompleto)}
+                      onPress={() => deletarMembroDireto(membro.id, membro.nomeCompleto)}
                     >
                       <Ionicons name="trash-outline" size={20} color="#FF3B30" />
                     </TouchableOpacity>
@@ -370,6 +412,7 @@ export default function Cadastrados() {
   );
 }
 
+// Mantenha os mesmos estilos...
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FFFFFF" },
   loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFFFFF" },
@@ -388,7 +431,6 @@ const styles = StyleSheet.create({
   backButton: { padding: 8 },
   title: { fontSize: 20, fontWeight: "bold", color: "#0A2C5E" },
   placeholder: { width: 40 },
-  // Novos estilos para as abas
   tabsContainer: {
     flexDirection: "row",
     backgroundColor: "#F8F9FA",
@@ -415,7 +457,6 @@ const styles = StyleSheet.create({
     color: "#0A2C5E",
     fontWeight: "bold",
   },
-  // Estilos existentes
   scrollView: { flex: 1 },
   content: { paddingHorizontal: 20, paddingBottom: 20 },
   subtitle: { fontSize: 16, color: "#666666", marginTop: 20, marginBottom: 16 },
