@@ -48,8 +48,18 @@ export default function CadastroMembro() {
         uid,
       });
 
-      Alert.alert("Sucesso", "Membro cadastrado com sucesso!");
-      router.back();
+      // ✅ ALERTA COM CALLBACK - SÓ VOLTA APÓS USUÁRIO CONFIRMAR
+      Alert.alert(
+        "Sucesso", 
+        "Membro cadastrado com sucesso!",
+        [
+          {
+            text: "OK",
+            onPress: () => router.back() // ← VOLTA SÓ QUANDO CLICAR EM OK
+          }
+        ]
+      );
+      
     } catch (error: any) {
       Alert.alert("Erro", error.message);
     }
@@ -61,26 +71,55 @@ export default function CadastroMembro() {
       <Text style={styles.title}>Cadastrar Membro</Text>
 
       <TextInput 
-      style={styles.input} 
-      placeholder="Nome completo" value={nome} onChangeText={setNome} />
+        style={styles.input} 
+        placeholder="Nome completo" 
+        value={nome} 
+        onChangeText={setNome} 
+      />
       <TextInput 
-      style={styles.input} 
-      placeholder="E-mail" value={email} onChangeText={setEmail} />
+        style={styles.input} 
+        placeholder="E-mail" 
+        value={email} 
+        onChangeText={setEmail} 
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
       <TextInput 
-      style={styles.input} 
-      placeholder="Senha" value={senha} onChangeText={setSenha} secureTextEntry />
+        style={styles.input} 
+        placeholder="Senha" 
+        value={senha} 
+        onChangeText={setSenha} 
+        secureTextEntry 
+      />
       <TextInput 
-      style={styles.input} 
-      placeholder="Data de nascimento" value={dataNascimento} onChangeText={setDataNascimento} />
+        style={styles.input} 
+        placeholder="Data de nascimento (DD/MM/AAAA)" 
+        value={dataNascimento} 
+        onChangeText={setDataNascimento} 
+      />
       <TextInput 
-      style={styles.input} 
-      placeholder="Sexo" value={sexo} onChangeText={setSexo} />
+        style={styles.input} 
+        placeholder="Sexo" 
+        value={sexo} 
+        onChangeText={setSexo} 
+      />
       <TextInput 
-      style={styles.input} 
-      placeholder="Tipo (crianca, idoso, pet)" value={tipoUsuario} onChangeText={setTipoUsuario} />
+        style={styles.input} 
+        placeholder="Tipo (crianca, idoso, pet)" 
+        value={tipoUsuario} 
+        onChangeText={setTipoUsuario} 
+      />
 
       <TouchableOpacity style={styles.button} onPress={handleCadastro}>
         <Text style={styles.buttonText}>Cadastrar</Text>
+      </TouchableOpacity>
+
+      {/* ✅ BOTÃO VOLTAR MANUAL - CASO PRECISE */}
+      <TouchableOpacity 
+        style={[styles.button, styles.backButton]} 
+        onPress={() => router.back()}
+      >
+        <Text style={styles.buttonText}>Voltar</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -120,7 +159,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#0A2C5E", 
     paddingVertical: 14, 
     borderRadius: 10, 
-    alignItems: "center" 
+    alignItems: "center",
+    marginBottom: 10, // ← ESPAÇAMENTO ENTRE BOTÕES
+  },
+  backButton: {
+    backgroundColor: "#666", // ← COR DIFERENTE PARA O BOTÃO VOLTAR
   },
   buttonText: { 
     color: "#fff", 

@@ -8,37 +8,60 @@ export default function AdicionarMembro() {
 
   return (
     <View style={styles.container}>
+      
       <ImageBackground
         source={require("../assets/images/fundo_home.png")}
         style={styles.background}
       >
+        
         <Image
           source={require("../assets/images/logo.png")}
           style={styles.logo}
         />
-        <Text style={styles.Title}>Adicionar Membro</Text>
 
-        <Text style={styles.Subtitle}>Selecione o tipo de membro para adicionar a sua família!</Text>
+        <Text style={styles.Title}>
+          Adicionar Membro
+        </Text>
+
+        <Text style={styles.Subtitle}>
+          Selecione o tipo de membro para adicionar a sua família!
+        </Text>
 
         <View style={styles.choices}>
-          <TouchableOpacity onPress = {() =>router.push("/cadastro_membro")}>
+          
+          <TouchableOpacity 
+            onPress={() => router.push("/cadastro_membro")}
+          >
             <Image
               source={require("../assets/images/pessoa.png")}
               style={styles.tipo}
             />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress = {() =>router.push("/cadastro_membro")}>
+          <TouchableOpacity 
+            onPress={() => router.push("/cadastro_membro")}
+          >
             <Image
               source={require("../assets/images/pet.png")}
               style={styles.tipo}
             />
           </TouchableOpacity>
+          
         </View>
+
+        <View style={styles.cadastradosContainer}>
+          <TouchableOpacity style={styles.cadastradosButton} onPress={() =>  router.push("/cadastrados")}>
+            <Text style={styles.cadastradosText}>
+              Ver membros cadastrados
+            </Text>
+          </TouchableOpacity>
+        </View>
+
       </ImageBackground>
-      
+
       {/* Barra inferior - FORA do ImageBackground */}
       <View style={styles.navbar}>
+        
         <TouchableOpacity 
           style={styles.navItem}
           onPress={() => router.push("/home")}
@@ -56,22 +79,27 @@ export default function AdicionarMembro() {
           <Ionicons name="person-circle" size={28} color="#0A2C5E" />
           <Text style={styles.navText}>Perfil</Text>
         </TouchableOpacity>
+
       </View>
+      
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
-    position: "relative", // ⭐ Importante para o position absolute da navbar
+    position: "relative",
   },
+  
   background: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-start",
-    paddingBottom: 70, // ⭐ Espaço para a navbar não sobrepor conteúdo
+    paddingBottom: 70,
   },
+  
   logo: {
     width: 246,
     height: 94,
@@ -79,17 +107,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     alignSelf: "center",
   },
-  tipo: {
-    width: 178,
-    height: 240,
-    marginHorizontal: 20,
-    borderRadius: 20,
-    marginTop: 24,
-  },
-  choices: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
+  
   Title: {
     fontSize: 32,
     fontWeight: "bold",
@@ -98,12 +116,48 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
+  
   Subtitle: {
     color: "#142850",
-    fontSize: 25,
+    fontSize: 20,
     textAlign: "center",
     paddingHorizontal: 20,
+    lineHeight: 24,
+    marginBottom: 30,
   },
+  
+  choices: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  
+  tipo: {
+    width: 178,
+    height: 240,
+    marginHorizontal: 10,
+    borderRadius: 20,
+  },
+  
+  cadastradosContainer: {
+    alignItems: "center",
+    marginTop: 20,
+  },
+  
+  cadastradosButton: {
+    backgroundColor: "#0A2C5E",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  
+  cadastradosText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+  
   navbar: {
     position: "absolute",
     bottom: 0,
@@ -116,11 +170,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#ccc",
   },
+  
   navItem: {
     alignItems: "center",
+    paddingVertical: 8,
   },
+  
   navText: {
     fontSize: 14,
     color: "#0A2C5E",
+    marginTop: 4,
   },
+  
 });
