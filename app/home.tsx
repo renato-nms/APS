@@ -47,6 +47,7 @@ export default function Home() {
                 style={[styles.button, styles.examesButton]} 
                 onPress={() => handleButtonPress("Exames")}
               >
+                  <Image source={require("../assets/images/Gota.png")} style={styles.icone} />
                 <Text style={styles.buttonText}>Exames</Text>
               </TouchableOpacity>
 
@@ -54,6 +55,7 @@ export default function Home() {
                 style={[styles.button, styles.vacinasButton]} 
                 onPress={() => handleButtonPress("Vacinas")}
               >
+                  <Image source={require("../assets/images/Gota.png")} style={styles.icone} />
                 <Text style={styles.buttonText}>Vacinas</Text>
               </TouchableOpacity>
 
@@ -61,6 +63,7 @@ export default function Home() {
                 style={[styles.button, styles.remediosButton]} 
                 onPress={() => handleButtonPress("Remédios")}
               >
+                  <Image source={require("../assets/images/Gota.png")} style={styles.icone} />
                 <Text style={styles.buttonText}>Remédios</Text>
               </TouchableOpacity>
 
@@ -68,6 +71,7 @@ export default function Home() {
                 style={[styles.button, styles.consultasButton]} 
                 onPress={() => handleButtonPress("Consultas")}
               >
+                  <Image source={require("../assets/images/Gota.png")} style={styles.icone} />
                 <Text style={styles.buttonText}>Consultas</Text>
               </TouchableOpacity>
             </View>
@@ -164,6 +168,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+  },
+
+  icone: {
+    width: 60,
+    height: 60,
+    marginRight: 15, // espaço entre o urso e o texto
   },
   examesButton: {
     backgroundColor: "#B8FDDE",
