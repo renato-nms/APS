@@ -1,11 +1,11 @@
 import React from "react";
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Alert, 
-  Image, 
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Image,
   ScrollView,
   SafeAreaView,
   ImageBackground,
@@ -15,63 +15,83 @@ import { useRouter } from "expo-router";
 
 export default function Home() {
   const router = useRouter();
-  
+
   const handleButtonPress = (buttonName: string) => {
-    Alert.alert("Funcionalidade não implementada", `${buttonName} - Funcionalidade ainda não aplicada`);
+    Alert.alert(
+      "Funcionalidade não implementada",
+      `${buttonName} - Funcionalidade ainda não aplicada`
+    );
   };
 
   return (
-    <ImageBackground 
+    <ImageBackground
       source={require("../assets/images/fundo_home.png")}
       style={styles.background}
       resizeMode="cover"
     >
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
-          <Image source={require("../assets/images/logo.png")} style={styles.logo} />
+          <Image
+            source={require("../assets/images/logo.png")}
+            style={styles.logo}
+          />
 
           {/* Saudação */}
           <View style={styles.greetingContainer}>
-            <Text style={styles.headerTitle}>Olá! cuide da saúde da sua família aqui</Text>
+            <Text style={styles.headerTitle}>
+              Olá! cuide da saúde da sua família aqui
+            </Text>
           </View>
 
           {/* Conteúdo com Scroll */}
-          <ScrollView 
+          <ScrollView
             style={styles.scrollView}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
             {/* Grid de Botões */}
             <View style={styles.buttonsGrid}>
-              <TouchableOpacity 
-                style={[styles.button, styles.examesButton]} 
+              <TouchableOpacity
+                style={[styles.button, styles.examesButton]}
                 onPress={() => handleButtonPress("Exames")}
               >
-                  <Image source={require("../assets/images/Gota.png")} style={styles.icone} />
+                <Image
+                  source={require("../assets/images/Gota.png")}
+                  style={styles.icone}
+                />
                 <Text style={styles.buttonText}>Exames</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-                style={[styles.button, styles.vacinasButton]} 
+              <TouchableOpacity
+                style={[styles.button, styles.vacinasButton]}
                 onPress={() => handleButtonPress("Vacinas")}
               >
-                  <Image source={require("../assets/images/Gota.png")} style={styles.icone} />
+                <Image
+                  source={require("../assets/images/Gota.png")}
+                  style={styles.icone}
+                />
                 <Text style={styles.buttonText}>Vacinas</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-                style={[styles.button, styles.remediosButton]} 
+              <TouchableOpacity
+                style={[styles.button, styles.remediosButton]}
                 onPress={() => handleButtonPress("Remédios")}
               >
-                  <Image source={require("../assets/images/Gota.png")} style={styles.icone} />
+                <Image
+                  source={require("../assets/images/Gota.png")}
+                  style={styles.icone}
+                />
                 <Text style={styles.buttonText}>Remédios</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-                style={[styles.button, styles.consultasButton]} 
+              <TouchableOpacity
+                style={[styles.button, styles.consultasButton]}
                 onPress={() => handleButtonPress("Consultas")}
               >
-                  <Image source={require("../assets/images/Gota.png")} style={styles.icone} />
+                <Image
+                  source={require("../assets/images/Gota.png")}
+                  style={styles.icone}
+                />
                 <Text style={styles.buttonText}>Consultas</Text>
               </TouchableOpacity>
             </View>
@@ -79,13 +99,38 @@ export default function Home() {
 
           {/* Barra inferior FIXA */}
           <View style={styles.navbar}>
-            <TouchableOpacity style={styles.navItem}>
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => router.push("/home")}
+            >
               <Ionicons name="home" size={28} color="#00ff55" />
               <Text style={styles.navText}>Início</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.navItem} onPress={() => router.push('/homeFamilia')}>
-              <Ionicons name="people" size={28} color="#0A2C5E" />
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => router.push("/Historico")}
+            >
+              <Image
+                source={require("../assets/images/HistoricoAtivo.png")}
+                style={styles.iconenavbar}
+              />
+              <Text style={styles.navText}>Histórico</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => router.push("/Lembrete")}
+            >
+              <Ionicons name="notifications" size={28} color="#0A2C5E" />
+              <Text style={styles.navText}>Lembrete</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.navItem}
+              onPress={() => router.push("/homeFamilia")}
+            >
+              <Ionicons name="people" size={28} color="#0A2C5" />
               <Text style={styles.navText}>Família</Text>
             </TouchableOpacity>
 
@@ -103,25 +148,25 @@ export default function Home() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   safeArea: {
     flex: 1,
-    backgroundColor: 'transparent', // ← TRANSPARENTE
+    backgroundColor: "transparent", // ← TRANSPARENTE
   },
   container: {
     flex: 1,
-    backgroundColor: 'transparent', // ← TRANSPARENTE
+    backgroundColor: "transparent", // ← TRANSPARENTE
   },
   scrollView: {
     flex: 1,
-    backgroundColor: 'transparent', // ← TRANSPARENTE
+    backgroundColor: "transparent", // ← TRANSPARENTE
   },
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 80,
-    backgroundColor: 'transparent', // ← TRANSPARENTE
+    backgroundColor: "transparent", // ← TRANSPARENTE
   },
   logo: {
     width: 246,
@@ -142,15 +187,15 @@ const styles = StyleSheet.create({
   greetingContainer: {
     padding: 15,
     alignItems: "center",
-    backgroundColor: 'transparent', // ← TRANSPARENTE
+    backgroundColor: "transparent", // ← TRANSPARENTE
   },
   buttonsGrid: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: "column",
+    alignItems: "center",
     paddingHorizontal: 20,
     marginTop: 10,
     marginBottom: 20,
-    backgroundColor: 'transparent', // ← TRANSPARENTE
+    backgroundColor: "transparent", // ← TRANSPARENTE
   },
   button: {
     width: "100%",
@@ -191,7 +236,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: "bold",
     color: "#0A2C5E",
-    left: 40
+    left: 40,
   },
   navbar: {
     height: 70,
@@ -209,5 +254,10 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 14,
     color: "#0A2C5E",
+  },
+  iconenavbar: {
+    width: 28,
+    height: 28,
+    tintColor: "#0A2C5E",
   },
 });
