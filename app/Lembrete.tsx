@@ -1,9 +1,19 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router"; // ou o seu gerenciador de rotas
+import { router } from "expo-router";
+import { useLembretes } from "./context/LembreteContext";
 
-export default function Historico() {
+export default function Lembrete() {
+  const { lembretes } = useLembretes();
+
   return (
     <View style={styles.container}>
       {/* Topo centralizado */}
@@ -12,8 +22,12 @@ export default function Historico() {
           source={require("../assets/images/logo.png")}
           style={styles.logo}
         />
-        <Text style={styles.titulo}>Lembrete</Text>
-        <Text style={styles.subtitulo}> Seus próximos eventos de saúde</Text>
+        <Text style={styles.tituloPrincipal}>CADERNETA DIGITAL</Text>
+        <Text style={styles.subtituloPrincipal}>DA FAMÍLIA</Text>
+        <Text style={styles.titulo}>Lembretes</Text>
+        <Text style={styles.subtitulo}>Seus próximos eventos de saúde</Text>
+
+        {/* Botão Adicionar Lembrete */}
         <View style={styles.adicionar}>
           <TouchableOpacity
             style={styles.add}
@@ -24,11 +38,44 @@ export default function Historico() {
           </TouchableOpacity>
         </View>
       </View>
-      {/* Conteúdo principal */}
-      <View style={styles.conteudo}>
-        <Text style={styles.textoDesenvolvimento}>Tela em desenvolvimento</Text>
-      </View>
-      Barra inferior FIXA
+
+      {/* Lista de Lembretes */}
+      <ScrollView
+        style={styles.conteudo}
+        contentContainerStyle={styles.listaLembretes}
+      >
+        {lembretes.length > 0 ? (
+          lembretes.map((lembrete) => (
+            <View key={lembrete.id} style={styles.lembreteItem}>
+              <View style={styles.lembreteHeader}>
+                <Text style={styles.lembreteTitulo}>
+                  {lembrete.tipo}: {lembrete.nome}
+                </Text>
+              </View>
+
+              {lembrete.dosagem ? (
+                <Text style={styles.lembreteDetalhe}>{lembrete.dosagem}</Text>
+              ) : null}
+
+              {lembrete.membro ? (
+                <Text style={styles.lembreteDetalhe}>{lembrete.membro}</Text>
+              ) : null}
+
+              <Text style={styles.lembreteData}>
+                {lembrete.horario
+                  ? `${lembrete.data}, ${lembrete.horario}`
+                  : lembrete.data}
+              </Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.semLembretes}>Nenhum lembrete agendado</Text>
+        )}
+
+        <View style={styles.espacoSeguro} />
+      </ScrollView>
+
+      {/* Barra inferior FIXA */}
       <View style={styles.navbar}>
         <TouchableOpacity
           style={styles.navItem}
@@ -84,24 +131,29 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     marginBottom: 10,
   },
-  titulo: {
-    fontSize: 48,
+  tituloPrincipal: {
+    fontSize: 24,
     fontWeight: "bold",
     color: "#0A2C5E",
+    textAlign: "center",
+  },
+  subtituloPrincipal: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#0A2C5E",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  titulo: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#0A2C5E",
+    marginTop: 10,
   },
   subtitulo: {
-    fontSize: 24,
-    fontWeight: "600", // "semibold" não é suportado, use "600"
-    color: "#133a74",
-  },
-  conteudo: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  textoDesenvolvimento: {
     fontSize: 18,
-    color: "#666",
+    fontWeight: "600",
+    color: "#133a74",
   },
   adicionar: {
     padding: 20,
@@ -122,7 +174,59 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontWeight: "500",
   },
-
+  conteudo: {
+    flex: 1,
+    paddingHorizontal: 20,
+    marginBottom: 70,
+  },
+  listaLembretes: {
+    paddingVertical: 20,
+  },
+  lembreteItem: {
+    backgroundColor: "#FFFFFF",
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 15,
+    borderLeftWidth: 4,
+    borderLeftColor: "#0A2C5E",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  lembreteHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  lembreteTitulo: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#0A2C5E",
+  },
+  lembreteDetalhe: {
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 5,
+  },
+  lembreteData: {
+    fontSize: 14,
+    color: "#666",
+    fontStyle: "italic",
+    marginTop: 5,
+  },
+  semLembretes: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 50,
+    fontStyle: "italic",
+  },
+  espacoSeguro: {
+    height: 30,
+  },
   navbar: {
     position: "absolute",
     bottom: 0,
@@ -141,13 +245,5 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 14,
     color: "#0A2C5E",
-  },
-  iconenavbar: {
-    width: 28,
-    height: 28,
-    tintColor: "#0A2C5E",
-  },
-  historico: {
-    color: "#00ff55",
   },
 });

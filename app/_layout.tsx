@@ -1,5 +1,10 @@
 import { Stack } from "expo-router";
+import { LembreteProvider } from "./context/LembreteContext";
 
 export default function Layout() {
-  return <Stack />;
+  return (
+    <LembreteProvider>
+      <Stack />
+    </LembreteProvider>
+  );
 }
