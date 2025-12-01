@@ -53,7 +53,7 @@ export default function Home() {
             <View style={styles.buttonsGrid}>
               <TouchableOpacity
                 style={[styles.button, styles.examesButton]}
-                onPress={() => handleButtonPress("Exames")}
+                onPress={() => router.push("./saudelider/exames")}
               >
                 <Image
                   source={require("../assets/images/Gota.png")}
@@ -64,7 +64,7 @@ export default function Home() {
 
               <TouchableOpacity
                 style={[styles.button, styles.vacinasButton]}
-                onPress={() => handleButtonPress("Vacinas")}
+                onPress={() => router.push("./saudelider/vacinas")}
               >
                 <Image
                   source={require("../assets/images/Gota.png")}
@@ -75,7 +75,7 @@ export default function Home() {
 
               <TouchableOpacity
                 style={[styles.button, styles.remediosButton]}
-                onPress={() => handleButtonPress("Remédios")}
+                onPress={() => router.push("./saudelider/remedios")}
               >
                 <Image
                   source={require("../assets/images/Gota.png")}
@@ -86,7 +86,7 @@ export default function Home() {
 
               <TouchableOpacity
                 style={[styles.button, styles.consultasButton]}
-                onPress={() => handleButtonPress("Consultas")}
+                onPress={() => router.push("./saudelider/consultas")}
               >
                 <Image
                   source={require("../assets/images/Gota.png")}
