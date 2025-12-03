@@ -1,5 +1,13 @@
-import React from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, Image, ImageBackground } from 'react-native';
+import { router } from "expo-router";
+import React from "react";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ImageBackground,
+} from "react-native";
 
 export default function HomeCrianca() {
   const handleButtonPress = (tipo) => {
@@ -18,39 +26,53 @@ export default function HomeCrianca() {
         style={styles.logo}
       />
 
-      <Text style={styles.title}>Oi! Vamos brincar de cuidar da sua saúde?</Text>
+      <Text style={styles.title}>
+        Oi! Vamos brincar de cuidar da sua saúde?
+      </Text>
 
       <View style={styles.buttonsGrid}>
         <TouchableOpacity
           style={[styles.button, styles.examesButton]}
-          onPress={() => handleButtonPress("Meus cuidados")}
+          onPress={() => router.push("./saudecrianca/consultas")}
         >
-          <Image source={require("../assets/images/Urso.png")} style={styles.icone} />
-          <Text style={styles.buttonText}>Exames</Text>
+          <Image
+            source={require("../assets/images/Urso.png")}
+            style={styles.icone}
+          />
+          <Text style={styles.buttonText}>Meus cuidados</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.button, styles.vacinasButton]}
           onPress={() => handleButtonPress("Minhas gotinhas")}
         >
-          <Image source={require("../assets/images/Gota.png")} style={styles.icone} />
-          <Text style={styles.buttonText}>Vacinas</Text>
+          <Image
+            source={require("../assets/images/Gota.png")}
+            style={styles.icone}
+          />
+          <Text style={styles.buttonText}>Minhas gotinhas</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.button, styles.remediosButton]}
           onPress={() => handleButtonPress("Minhas vitaminas")}
         >
-          <Image source={require("../assets/images/Vitamina.png")} style={styles.icone} />
-          <Text style={styles.buttonText}>Remédios</Text>
+          <Image
+            source={require("../assets/images/Vitamina.png")}
+            style={styles.icone}
+          />
+          <Text style={styles.buttonText}>Minhas vitaminas</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-        style={[styles.button, styles.VisitasButton]}
-        onPress={() => handleButtonPress("Minhas visitas")}
+          style={[styles.button, styles.VisitasButton]}
+          onPress={() => handleButtonPress("Minhas visitas")}
         >
-          <Image source={require("../assets/images/Visita.png")} style={styles.icone} />
-          <Text style={styles.buttonText}>Minhas visitas</Text>
+          <Image
+            source={require("../assets/images/Visita.png")}
+            style={styles.icone}
+          />
+          <Text style={styles.buttonText}>Visitas ao doutor</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -60,8 +82,8 @@ export default function HomeCrianca() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   logo: {
     width: 246,
@@ -71,23 +93,23 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#000",
+    textAlign: "center",
     marginVertical: 20,
   },
   buttonsGrid: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: "column",
+    alignItems: "center",
     paddingHorizontal: 20,
     marginTop: 10,
     marginBottom: 20,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   button: {
-    flexDirection: 'row', // imagem + texto lado a lado
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    flexDirection: "row", // imagem + texto lado a lado
+    alignItems: "center",
+    justifyContent: "flex-start",
     width: "100%",
     maxWidth: 354,
     height: 100,
@@ -118,7 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFDBE",
   },
   VisitasButton: {
-        backgroundColor: "#FFFDBE",
+    backgroundColor: "#FFFDBE",
   },
   buttonText: {
     fontSize: 30,

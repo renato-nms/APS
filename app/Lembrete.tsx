@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -16,98 +17,104 @@ export default function Lembrete() {
 
   return (
     <View style={styles.container}>
-      {/* Topo centralizado */}
-      <View style={styles.topo}>
-        <Image
-          source={require("../assets/images/logo.png")}
-          style={styles.logo}
-        />
-        <Text style={styles.tituloPrincipal}>CADERNETA DIGITAL</Text>
-        <Text style={styles.subtituloPrincipal}>DA FAMÍLIA</Text>
-        <Text style={styles.titulo}>Lembretes</Text>
-        <Text style={styles.subtitulo}>Seus próximos eventos de saúde</Text>
-
-        {/* Botão Adicionar Lembrete */}
-        <View style={styles.adicionar}>
-          <TouchableOpacity
-            style={styles.add}
-            onPress={() => router.push("/AddLembrete")}
-          >
-            <Ionicons name="add-circle" size={28} color="#ffffff" />
-            <Text style={styles.textoAdd}>Adicionar lembrete</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Lista de Lembretes */}
-      <ScrollView
-        style={styles.conteudo}
-        contentContainerStyle={styles.listaLembretes}
+      <ImageBackground
+        source={require("../assets/images/fundo_home.png")}
+        style={styles.background}
+        resizeMode="cover"
       >
-        {lembretes.length > 0 ? (
-          lembretes.map((lembrete) => (
-            <View key={lembrete.id} style={styles.lembreteItem}>
-              <View style={styles.lembreteHeader}>
-                <Text style={styles.lembreteTitulo}>
-                  {lembrete.tipo}: {lembrete.nome}
+        {/* Topo centralizado */}
+        <View style={styles.topo}>
+          <Image
+            source={require("../assets/images/logo.png")}
+            style={styles.logo}
+          />
+          <Text style={styles.tituloPrincipal}>CADERNETA DIGITAL</Text>
+          <Text style={styles.subtituloPrincipal}>DA FAMÍLIA</Text>
+          <Text style={styles.titulo}>Lembretes</Text>
+          <Text style={styles.subtitulo}>Seus próximos eventos de saúde</Text>
+
+          {/* Botão Adicionar Lembrete */}
+          <View style={styles.adicionar}>
+            <TouchableOpacity
+              style={styles.add}
+              onPress={() => router.push("/AddLembrete")}
+            >
+              <Ionicons name="add-circle" size={28} color="#ffffff" />
+              <Text style={styles.textoAdd}>Adicionar lembrete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Lista de Lembretes */}
+        <ScrollView
+          style={styles.conteudo}
+          contentContainerStyle={styles.listaLembretes}
+        >
+          {lembretes.length > 0 ? (
+            lembretes.map((lembrete) => (
+              <View key={lembrete.id} style={styles.lembreteItem}>
+                <View style={styles.lembreteHeader}>
+                  <Text style={styles.lembreteTitulo}>
+                    {lembrete.tipo}: {lembrete.nome}
+                  </Text>
+                </View>
+
+                {lembrete.dosagem ? (
+                  <Text style={styles.lembreteDetalhe}>{lembrete.dosagem}</Text>
+                ) : null}
+
+                {lembrete.membro ? (
+                  <Text style={styles.lembreteDetalhe}>{lembrete.membro}</Text>
+                ) : null}
+
+                <Text style={styles.lembreteData}>
+                  {lembrete.horario
+                    ? `${lembrete.data}, ${lembrete.horario}`
+                    : lembrete.data}
                 </Text>
               </View>
+            ))
+          ) : (
+            <Text style={styles.semLembretes}>Nenhum lembrete agendado</Text>
+          )}
 
-              {lembrete.dosagem ? (
-                <Text style={styles.lembreteDetalhe}>{lembrete.dosagem}</Text>
-              ) : null}
+          <View style={styles.espacoSeguro} />
+        </ScrollView>
 
-              {lembrete.membro ? (
-                <Text style={styles.lembreteDetalhe}>{lembrete.membro}</Text>
-              ) : null}
+        {/* Barra inferior FIXA */}
+        <View style={styles.navbar}>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => router.push("/home")}
+          >
+            <Ionicons name="home" size={28} color="#0A2C5E" />
+            <Text style={styles.navText}>Início</Text>
+          </TouchableOpacity>
 
-              <Text style={styles.lembreteData}>
-                {lembrete.horario
-                  ? `${lembrete.data}, ${lembrete.horario}`
-                  : lembrete.data}
-              </Text>
-            </View>
-          ))
-        ) : (
-          <Text style={styles.semLembretes}>Nenhum lembrete agendado</Text>
-        )}
+          <TouchableOpacity style={styles.navItem}>
+            <Ionicons name="watch-outline" size={28} color="#0A2C5E" />
+            <Text style={styles.navText}>Histórico</Text>
+          </TouchableOpacity>
 
-        <View style={styles.espacoSeguro} />
-      </ScrollView>
+          <TouchableOpacity style={styles.navItem}>
+            <Ionicons name="notifications" size={28} color="#0A2C5E" />
+            <Text style={styles.navText}>Lembrete</Text>
+          </TouchableOpacity>
 
-      {/* Barra inferior FIXA */}
-      <View style={styles.navbar}>
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push("/home")}
-        >
-          <Ionicons name="home" size={28} color="#0A2C5E" />
-          <Text style={styles.navText}>Início</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.navItem}
+            onPress={() => router.push("/homeFamilia")}
+          >
+            <Ionicons name="people" size={28} color="#0A2C5E" />
+            <Text style={styles.navText}>Família</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="watch-outline" size={28} color="#00ff55" />
-          <Text style={styles.navText}>Histórico</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Ionicons name="notifications" size={28} color="#0A2C5E" />
-          <Text style={styles.navText}>Lembrete</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => router.push("/homeFamilia")}
-        >
-          <Ionicons name="people" size={28} color="#0A2C5E" />
-          <Text style={styles.navText}>Família</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="person-circle" size={28} color="#0A2C5E" />
-          <Text style={styles.navText}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity style={styles.navItem}>
+            <Ionicons name="person-circle" size={28} color="#0A2C5E" />
+            <Text style={styles.navText}>Perfil</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
     </View>
   );
 }
@@ -115,13 +122,17 @@ export default function Lembrete() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "transparent",
+  },
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
   },
   topo: {
     alignItems: "center",
     paddingTop: 60,
     paddingBottom: 20,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "rgba(248, 248, 248, 0.9)",
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
   },
