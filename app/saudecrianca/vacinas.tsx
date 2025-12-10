@@ -13,15 +13,15 @@ import { router } from "expo-router";
 import { auth, db } from "../firebase/firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
-export default function MinhasConsultas() {
-  const [consultas, setConsultas] = useState<any[]>([]);
+export default function MinhasVacinas() {
+  const [vacinas, setVacinas] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [debugInfo, setDebugInfo] = useState("");
   const currentUser = auth.currentUser;
 
   useEffect(() => {
-    const fetchConsultas = async () => {
-      console.log("=== INICIANDO BUSCA DE CONSULTAS ===");
+    const fetchVacinas = async () => {
+      console.log("=== INICIANDO BUSCA DE VACINAS ===");
       console.log("Usuário atual UID:", currentUser?.uid);
       console.log("Usuário atual email:", currentUser?.email);
 
@@ -51,23 +51,23 @@ export default function MinhasConsultas() {
           });
         });
 
-        // Buscar CONSULTAS para o usuário atual
+        // Buscar VACINAS para o usuário atual
         console.log(
-          `\n🔍 Buscando CONSULTAS para paciente_uuid: ${currentUser.uid}`
+          `\n🔍 Buscando VACINAS para paciente_uuid: ${currentUser.uid}`
         );
 
-        // Query 1: Buscar por paciente_uuid E tipo "Consulta"
+        // Query 1: Buscar por paciente_uuid E tipo "Vacina"
         const q1 = query(
           lembretesRef,
           where("paciente_uuid", "==", currentUser.uid),
-          where("tipo", "==", "Consulta")
+          where("tipo", "==", "Vacina")
         );
 
-        // Query 2: Buscar por membro_id E tipo "Consulta" (backup)
+        // Query 2: Buscar por membro_id E tipo "Vacina" (backup)
         const q2 = query(
           lembretesRef,
           where("membro_id", "==", currentUser.uid),
-          where("tipo", "==", "Consulta")
+          where("tipo", "==", "Vacina")
         );
 
         const [querySnapshot1, querySnapshot2] = await Promise.all([
@@ -76,24 +76,24 @@ export default function MinhasConsultas() {
         ]);
 
         console.log(
-          `✅ Consultas encontradas por paciente_uuid: ${querySnapshot1.size}`
+          `✅ Vacinas encontradas por paciente_uuid: ${querySnapshot1.size}`
         );
         console.log(
-          `✅ Consultas encontradas por membro_id: ${querySnapshot2.size}`
+          `✅ Vacinas encontradas por membro_id: ${querySnapshot2.size}`
         );
 
-        const consultasFiltradas: any[] = [];
+        const vacinasFiltradas: any[] = [];
 
-        // Adicionar consultas da primeira query
+        // Adicionar vacinas da primeira query
         querySnapshot1.forEach((doc) => {
           const data = doc.data();
-          console.log(`🎯 Consulta encontrada (paciente_uuid):`, {
+          console.log(`🎯 Vacina encontrada (paciente_uuid):`, {
             id: doc.id,
             ...data,
           });
 
-          if (data.tipo === "Consulta") {
-            consultasFiltradas.push({
+          if (data.tipo === "Vacina") {
+            vacinasFiltradas.push({
               id: doc.id,
               tipo: data.tipo,
               nome: data.nome || "Sem nome",
@@ -102,23 +102,23 @@ export default function MinhasConsultas() {
               membro: data.membro,
               criado_por_email: data.criado_por_email,
               membro_tipo: data.membro_tipo,
-              especialidade: data.especialidade || "Não informada",
+              dose: data.dose || data.dosagem || "Não informada",
               ...data,
             });
           }
         });
 
-        // Adicionar consultas da segunda query (evitando duplicados)
+        // Adicionar vacinas da segunda query (evitando duplicados)
         querySnapshot2.forEach((doc) => {
-          if (!consultasFiltradas.find((c) => c.id === doc.id)) {
+          if (!vacinasFiltradas.find((v) => v.id === doc.id)) {
             const data = doc.data();
-            console.log(`🎯 Consulta encontrada (membro_id):`, {
+            console.log(`🎯 Vacina encontrada (membro_id):`, {
               id: doc.id,
               ...data,
             });
 
-            if (data.tipo === "Consulta") {
-              consultasFiltradas.push({
+            if (data.tipo === "Vacina") {
+              vacinasFiltradas.push({
                 id: doc.id,
                 tipo: data.tipo,
                 nome: data.nome || "Sem nome",
@@ -127,30 +127,30 @@ export default function MinhasConsultas() {
                 membro: data.membro,
                 criado_por_email: data.criado_por_email,
                 membro_tipo: data.membro_tipo,
-                especialidade: data.especialidade || "Não informada",
+                dose: data.dose || data.dosagem || "Não informada",
                 ...data,
               });
             }
           }
         });
 
-        // Também filtrar por tipo "consulta" em lowercase (caso exista)
+        // Também filtrar por tipo "Vacina" em português (caso exista)
         const q3 = query(
           lembretesRef,
           where("paciente_uuid", "==", currentUser.uid),
-          where("tipo", "==", "consulta") // lowercase
+          where("tipo", "==", "vacina") // lowercase
         );
 
         const querySnapshot3 = await getDocs(q3);
         console.log(
-          `✅ Consultas encontradas (lowercase): ${querySnapshot3.size}`
+          `✅ Vacinas encontradas (lowercase): ${querySnapshot3.size}`
         );
 
         querySnapshot3.forEach((doc) => {
-          if (!consultasFiltradas.find((c) => c.id === doc.id)) {
+          if (!vacinasFiltradas.find((v) => v.id === doc.id)) {
             const data = doc.data();
-            if (data.tipo?.toLowerCase() === "consulta") {
-              consultasFiltradas.push({
+            if (data.tipo?.toLowerCase() === "vacina") {
+              vacinasFiltradas.push({
                 id: doc.id,
                 tipo: data.tipo,
                 nome: data.nome || "Sem nome",
@@ -159,7 +159,7 @@ export default function MinhasConsultas() {
                 membro: data.membro,
                 criado_por_email: data.criado_por_email,
                 membro_tipo: data.membro_tipo,
-                especialidade: data.especialidade || "Não informada",
+                dose: data.dose || data.dosagem || "Não informada",
                 ...data,
               });
             }
@@ -168,11 +168,11 @@ export default function MinhasConsultas() {
 
         console.log("\n=== RESULTADO FINAL ===");
         console.log(
-          `Total de consultas para exibição: ${consultasFiltradas.length}`
+          `Total de vacinas para exibição: ${vacinasFiltradas.length}`
         );
 
         // Ordenar por data (mais próxima primeiro)
-        consultasFiltradas.sort((a, b) => {
+        vacinasFiltradas.sort((a, b) => {
           try {
             const dateA = new Date(a.data.split("/").reverse().join("-"));
             const dateB = new Date(b.data.split("/").reverse().join("-"));
@@ -182,11 +182,11 @@ export default function MinhasConsultas() {
           }
         });
 
-        setConsultas(consultasFiltradas);
+        setVacinas(vacinasFiltradas);
         setDebugInfo(
           `Total na coleção: ${todosDados.length}\n` +
-            `Consultas encontradas: ${consultasFiltradas.length}\n` +
-            `Filtro: tipo = "Consulta"`
+            `Vacinas encontradas: ${vacinasFiltradas.length}\n` +
+            `Filtro: tipo = "Vacina"`
         );
       } catch (error: any) {
         console.error("❌ ERRO CRÍTICO:", error);
@@ -196,10 +196,10 @@ export default function MinhasConsultas() {
       }
     };
 
-    fetchConsultas();
+    fetchVacinas();
   }, [currentUser]);
 
-  // Função para verificar se a consulta é para hoje
+  // Função para verificar se a vacina é para hoje
   const isParaHoje = (dataString: string) => {
     try {
       const hoje = new Date().toLocaleDateString("pt-BR");
@@ -209,37 +209,50 @@ export default function MinhasConsultas() {
     }
   };
 
-  // Função para verificar se a consulta é próxima (próximos 3 dias)
+  // Função para verificar se a vacina é próxima (próximos 7 dias)
   const isProxima = (dataString: string) => {
     try {
       const hoje = new Date();
-      const dataConsulta = new Date(dataString.split("/").reverse().join("-"));
-      const diffTime = dataConsulta.getTime() - hoje.getTime();
+      const dataVacina = new Date(dataString.split("/").reverse().join("-"));
+      const diffTime = dataVacina.getTime() - hoje.getTime();
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      return diffDays > 0 && diffDays <= 3; // Próximos 3 dias
+      return diffDays > 0 && diffDays <= 7; // Próximos 7 dias
     } catch {
       return false;
     }
   };
 
-  // Renderizar a consulta
-  const renderConsulta = (consulta: any) => {
-    const hoje = isParaHoje(consulta.data);
-    const proxima = isProxima(consulta.data);
+  // Função para verificar se a vacina está atrasada
+  const isAtrasada = (dataString: string) => {
+    try {
+      const hoje = new Date();
+      const dataVacina = new Date(dataString.split("/").reverse().join("-"));
+      return dataVacina < hoje;
+    } catch {
+      return false;
+    }
+  };
+
+  // Renderizar a vacina
+  const renderVacina = (vacina: any) => {
+    const hoje = isParaHoje(vacina.data);
+    const proxima = isProxima(vacina.data);
+    const atrasada = isAtrasada(vacina.data);
 
     return (
       <View
         style={[
-          styles.consultaItem,
-          hoje && styles.consultaHoje,
-          proxima && styles.consultaProxima,
+          styles.vacinaItem,
+          hoje && styles.vacinaHoje,
+          proxima && styles.vacinaProxima,
+          atrasada && styles.vacinaAtrasada,
         ]}
       >
         {/* Cabeçalho com tipo e status */}
-        <View style={styles.consultaHeader}>
+        <View style={styles.vacinaHeader}>
           <View style={styles.tipoContainer}>
-            <Ionicons name="medical-outline" size={20} color="#0A2C5E" />
-            <Text style={styles.tipo}>CONSULTA</Text>
+            <Ionicons name="shield-outline" size={20} color="#0A2C5E" />
+            <Text style={styles.tipo}>VACINA</Text>
           </View>
 
           {hoje && (
@@ -255,18 +268,24 @@ export default function MinhasConsultas() {
               <Text style={styles.statusText}>PRÓXIMA</Text>
             </View>
           )}
+
+          {atrasada && !hoje && (
+            <View style={[styles.statusBadge, styles.atrasadaBadge]}>
+              <Ionicons name="warning-outline" size={14} color="#FF3B30" />
+              <Text style={styles.statusText}>ATRASADA</Text>
+            </View>
+          )}
         </View>
 
-        {/* Nome da consulta */}
-        <Text style={styles.nome}>{consulta.nome}</Text>
+        {/* Nome da vacina */}
+        <Text style={styles.nome}>{vacina.nome}</Text>
 
-        {/* Especialidade */}
-        {consulta.especialidade && (
+        {/* Dose da vacina */}
+        {vacina.dose && (
           <View style={styles.infoRow}>
-            <Ionicons name="star-outline" size={16} color="#666" />
+            <Ionicons name="medical-outline" size={16} color="#666" />
             <Text style={styles.info}>
-              Especialidade:{" "}
-              <Text style={styles.destaque}>{consulta.especialidade}</Text>
+              Dose: <Text style={styles.destaque}>{vacina.dose}</Text>
             </Text>
           </View>
         )}
@@ -275,61 +294,49 @@ export default function MinhasConsultas() {
         <View style={styles.infoRow}>
           <Ionicons name="calendar-outline" size={16} color="#666" />
           <Text style={styles.data}>
-            {consulta.data} {consulta.horario ? `• ${consulta.horario}` : ""}
+            {vacina.data} {vacina.horario ? `• ${vacina.horario}` : ""}
           </Text>
         </View>
 
         {/* Informações do remetente */}
-        {consulta.criado_por_email && (
+        {vacina.criado_por_email && (
           <View style={styles.infoRow}>
             <Ionicons name="person-outline" size={16} color="#666" />
             <Text style={styles.info}>
-              Agendada por: {consulta.criado_por_email}
+              Agendada por: {vacina.criado_por_email}
             </Text>
           </View>
         )}
 
         {/* Destinatário (se for diferente do usuário) */}
-        {consulta.membro && (
+        {vacina.membro && (
           <View style={styles.infoRow}>
             <Ionicons name="people-outline" size={16} color="#666" />
-            <Text style={styles.info}>Para: {consulta.membro}</Text>
-          </View>
-        )}
-
-        {/* Médico/Profissional */}
-        {consulta.medico && (
-          <View style={styles.infoRow}>
-            <Ionicons name="person-circle-outline" size={16} color="#666" />
-            <Text style={styles.info}>
-              Médico: <Text style={styles.destaque}>{consulta.medico}</Text>
-            </Text>
-          </View>
-        )}
-
-        {/* Local/Clínica */}
-        {consulta.local && (
-          <View style={styles.infoRow}>
-            <Ionicons name="location-outline" size={16} color="#666" />
-            <Text style={styles.info}>
-              Local: <Text style={styles.destaque}>{consulta.local}</Text>
-            </Text>
+            <Text style={styles.info}>Para: {vacina.membro}</Text>
           </View>
         )}
 
         {/* Observações/Detalhes */}
-        {consulta.observacoes && (
+        {vacina.observacoes && (
           <View style={styles.observacoesContainer}>
             <Text style={styles.observacoesTitle}>Observações:</Text>
-            <Text style={styles.observacoesText}>{consulta.observacoes}</Text>
+            <Text style={styles.observacoesText}>{vacina.observacoes}</Text>
           </View>
         )}
 
-        {/* Telefone para confirmação */}
-        {consulta.telefone && (
+        {/* Local/Clínica */}
+        {vacina.local && (
           <View style={styles.infoRow}>
-            <Ionicons name="call-outline" size={16} color="#666" />
-            <Text style={styles.info}>Telefone: {consulta.telefone}</Text>
+            <Ionicons name="location-outline" size={16} color="#666" />
+            <Text style={styles.info}>Local: {vacina.local}</Text>
+          </View>
+        )}
+
+        {/* Lote (se existir) */}
+        {vacina.lote && (
+          <View style={styles.infoRow}>
+            <Ionicons name="barcode-outline" size={16} color="#666" />
+            <Text style={styles.info}>Lote: {vacina.lote}</Text>
           </View>
         )}
       </View>
@@ -337,9 +344,12 @@ export default function MinhasConsultas() {
   };
 
   // Calcular estatísticas
-  const consultasHoje = consultas.filter((c) => isParaHoje(c.data)).length;
-  const consultasProximas = consultas.filter(
-    (c) => isProxima(c.data) && !isParaHoje(c.data)
+  const vacinasHoje = vacinas.filter((v) => isParaHoje(v.data)).length;
+  const vacinasProximas = vacinas.filter(
+    (v) => isProxima(v.data) && !isParaHoje(v.data)
+  ).length;
+  const vacinasAtrasadas = vacinas.filter(
+    (v) => isAtrasada(v.data) && !isParaHoje(v.data)
   ).length;
 
   return (
@@ -359,54 +369,63 @@ export default function MinhasConsultas() {
           <Text style={styles.userName}>{currentUser?.email}</Text>
         </View>
 
-        <Text style={styles.titulo}>Minhas Consultas</Text>
-        <Text style={styles.subtitulo}>Agenda médica e acompanhamento</Text>
+        <Text style={styles.titulo}>Minhas Vacinas</Text>
+        <Text style={styles.subtitulo}>Carteira de vacinação digital</Text>
       </View>
 
       {/* Conteúdo */}
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#0A2C5E" />
-          <Text style={styles.loadingText}>Buscando suas consultas...</Text>
+          <Text style={styles.loadingText}>Buscando suas vacinas...</Text>
         </View>
       ) : (
         <ScrollView
           style={styles.conteudo}
-          contentContainerStyle={styles.listaConsultas}
+          contentContainerStyle={styles.listaVacinas}
         >
-          {consultas.length > 0 ? (
+          {vacinas.length > 0 ? (
             <>
               {/* Resumo estatístico */}
               <View style={styles.resumoContainer}>
                 <View style={styles.resumoItem}>
-                  <Ionicons name="medical" size={24} color="#0A2C5E" />
-                  <Text style={styles.resumoNumero}>{consultas.length}</Text>
+                  <Ionicons name="shield" size={24} color="#0A2C5E" />
+                  <Text style={styles.resumoNumero}>{vacinas.length}</Text>
                   <Text style={styles.resumoTexto}>Total</Text>
                 </View>
 
                 <View style={styles.resumoItem}>
                   <Ionicons name="today" size={24} color="#FF3B30" />
-                  <Text style={styles.resumoNumero}>{consultasHoje}</Text>
+                  <Text style={styles.resumoNumero}>{vacinasHoje}</Text>
                   <Text style={styles.resumoTexto}>Hoje</Text>
                 </View>
 
                 <View style={styles.resumoItem}>
                   <Ionicons name="calendar" size={24} color="#FF9500" />
-                  <Text style={styles.resumoNumero}>{consultasProximas}</Text>
+                  <Text style={styles.resumoNumero}>{vacinasProximas}</Text>
                   <Text style={styles.resumoTexto}>Próximas</Text>
                 </View>
               </View>
 
-              {consultas.map((consulta) => (
-                <View key={consulta.id}>{renderConsulta(consulta)}</View>
+              {vacinasAtrasadas > 0 && (
+                <View style={styles.atrasadasAlert}>
+                  <Ionicons name="warning" size={20} color="#FF3B30" />
+                  <Text style={styles.atrasadasText}>
+                    Você tem {vacinasAtrasadas} vacina(s) atrasada(s)
+                  </Text>
+                </View>
+              )}
+
+              {vacinas.map((vacina) => (
+                <View key={vacina.id}>{renderVacina(vacina)}</View>
               ))}
             </>
           ) : (
-            <View style={styles.semConsultasContainer}>
-              <Ionicons name="medical-outline" size={80} color="#CCCCCC" />
-              <Text style={styles.semConsultas}>Nenhuma consulta agendada</Text>
-              <Text style={styles.semConsultasSub}>
-                Quando alguém agendar uma consulta para você, ela aparecerá aqui
+            <View style={styles.semVacinasContainer}>
+              <Ionicons name="shield-outline" size={80} color="#CCCCCC" />
+              <Text style={styles.semVacinas}>Nenhuma vacina agendada</Text>
+              <Text style={styles.semVacinasSub}>
+                Quando alguém agendar uma vacina para você, ela aparecerá aqui
               </Text>
 
               {/* Debug info */}
@@ -534,6 +553,22 @@ const styles = StyleSheet.create({
     color: "#666",
     marginTop: 2,
   },
+  atrasadasAlert: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFE5E5",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: "#FFCCCC",
+  },
+  atrasadasText: {
+    fontSize: 14,
+    color: "#FF3B30",
+    marginLeft: 8,
+    fontWeight: "500",
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -549,10 +584,10 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 70,
   },
-  listaConsultas: {
+  listaVacinas: {
     padding: 15,
   },
-  consultaItem: {
+  vacinaItem: {
     backgroundColor: "#FFFFFF",
     padding: 15,
     borderRadius: 10,
@@ -565,17 +600,22 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  consultaHoje: {
+  vacinaHoje: {
     borderLeftWidth: 4,
     borderLeftColor: "#FF3B30",
     backgroundColor: "#FFF5F5",
   },
-  consultaProxima: {
+  vacinaProxima: {
     borderLeftWidth: 4,
     borderLeftColor: "#FF9500",
     backgroundColor: "#FFF9F0",
   },
-  consultaHeader: {
+  vacinaAtrasada: {
+    borderLeftWidth: 4,
+    borderLeftColor: "#FF3B30",
+    backgroundColor: "#FFF0F0",
+  },
+  vacinaHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -607,6 +647,9 @@ const styles = StyleSheet.create({
   },
   proximaBadge: {
     backgroundColor: "#FFEBD6",
+  },
+  atrasadaBadge: {
+    backgroundColor: "#FFE5E5",
   },
   statusText: {
     fontSize: 10,
@@ -659,18 +702,18 @@ const styles = StyleSheet.create({
     color: "#666",
     lineHeight: 18,
   },
-  semConsultasContainer: {
+  semVacinasContainer: {
     alignItems: "center",
     padding: 40,
     marginTop: 20,
   },
-  semConsultas: {
+  semVacinas: {
     fontSize: 18,
     color: "#666",
     marginTop: 15,
     fontWeight: "500",
   },
-  semConsultasSub: {
+  semVacinasSub: {
     fontSize: 14,
     color: "#999",
     marginTop: 10,

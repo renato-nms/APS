@@ -248,7 +248,7 @@ export default function AgendarEvento() {
             style={styles.input}
             value={tipoEvento}
             onChangeText={setTipoEvento}
-            placeholder="Consulta, Exame, Medicamento, etc."
+            placeholder="Consulta, Exame, Medicamento, Vacina"
           />
         </View>
 

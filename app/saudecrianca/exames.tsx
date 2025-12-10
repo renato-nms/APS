@@ -13,15 +13,15 @@ import { router } from "expo-router";
 import { auth, db } from "../firebase/firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
-export default function MinhasConsultas() {
-  const [consultas, setConsultas] = useState<any[]>([]);
+export default function MeusExames() {
+  const [exames, setExames] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [debugInfo, setDebugInfo] = useState("");
   const currentUser = auth.currentUser;
 
   useEffect(() => {
-    const fetchConsultas = async () => {
-      console.log("=== INICIANDO BUSCA DE CONSULTAS ===");
+    const fetchExames = async () => {
+      console.log("=== INICIANDO BUSCA DE EXAMES ===");
       console.log("Usuário atual UID:", currentUser?.uid);
       console.log("Usuário atual email:", currentUser?.email);
 
@@ -51,23 +51,23 @@ export default function MinhasConsultas() {
           });
         });
 
-        // Buscar CONSULTAS para o usuário atual
+        // Buscar EXAMES para o usuário atual
         console.log(
-          `\n🔍 Buscando CONSULTAS para paciente_uuid: ${currentUser.uid}`
+          `\n🔍 Buscando EXAMES para paciente_uuid: ${currentUser.uid}`
         );
 
-        // Query 1: Buscar por paciente_uuid E tipo "Consulta"
+        // Query 1: Buscar por paciente_uuid E tipo "Exame"
         const q1 = query(
           lembretesRef,
           where("paciente_uuid", "==", currentUser.uid),
-          where("tipo", "==", "Consulta")
+          where("tipo", "==", "Exame")
         );
 
-        // Query 2: Buscar por membro_id E tipo "Consulta" (backup)
+        // Query 2: Buscar por membro_id E tipo "Exame" (backup)
         const q2 = query(
           lembretesRef,
           where("membro_id", "==", currentUser.uid),
-          where("tipo", "==", "Consulta")
+          where("tipo", "==", "Exame")
         );
 
         const [querySnapshot1, querySnapshot2] = await Promise.all([
@@ -76,24 +76,24 @@ export default function MinhasConsultas() {
         ]);
 
         console.log(
-          `✅ Consultas encontradas por paciente_uuid: ${querySnapshot1.size}`
+          `✅ Exames encontrados por paciente_uuid: ${querySnapshot1.size}`
         );
         console.log(
-          `✅ Consultas encontradas por membro_id: ${querySnapshot2.size}`
+          `✅ Exames encontrados por membro_id: ${querySnapshot2.size}`
         );
 
-        const consultasFiltradas: any[] = [];
+        const examesFiltrados: any[] = [];
 
-        // Adicionar consultas da primeira query
+        // Adicionar exames da primeira query
         querySnapshot1.forEach((doc) => {
           const data = doc.data();
-          console.log(`🎯 Consulta encontrada (paciente_uuid):`, {
+          console.log(`🎯 Exame encontrado (paciente_uuid):`, {
             id: doc.id,
             ...data,
           });
 
-          if (data.tipo === "Consulta") {
-            consultasFiltradas.push({
+          if (data.tipo === "Exame") {
+            examesFiltrados.push({
               id: doc.id,
               tipo: data.tipo,
               nome: data.nome || "Sem nome",
@@ -102,23 +102,22 @@ export default function MinhasConsultas() {
               membro: data.membro,
               criado_por_email: data.criado_por_email,
               membro_tipo: data.membro_tipo,
-              especialidade: data.especialidade || "Não informada",
               ...data,
             });
           }
         });
 
-        // Adicionar consultas da segunda query (evitando duplicados)
+        // Adicionar exames da segunda query (evitando duplicados)
         querySnapshot2.forEach((doc) => {
-          if (!consultasFiltradas.find((c) => c.id === doc.id)) {
+          if (!examesFiltrados.find((e) => e.id === doc.id)) {
             const data = doc.data();
-            console.log(`🎯 Consulta encontrada (membro_id):`, {
+            console.log(`🎯 Exame encontrado (membro_id):`, {
               id: doc.id,
               ...data,
             });
 
-            if (data.tipo === "Consulta") {
-              consultasFiltradas.push({
+            if (data.tipo === "Exame") {
+              examesFiltrados.push({
                 id: doc.id,
                 tipo: data.tipo,
                 nome: data.nome || "Sem nome",
@@ -127,30 +126,29 @@ export default function MinhasConsultas() {
                 membro: data.membro,
                 criado_por_email: data.criado_por_email,
                 membro_tipo: data.membro_tipo,
-                especialidade: data.especialidade || "Não informada",
                 ...data,
               });
             }
           }
         });
 
-        // Também filtrar por tipo "consulta" em lowercase (caso exista)
+        // Também filtrar por tipo "Exame" em português (caso exista)
         const q3 = query(
           lembretesRef,
           where("paciente_uuid", "==", currentUser.uid),
-          where("tipo", "==", "consulta") // lowercase
+          where("tipo", "==", "exame") // lowercase
         );
 
         const querySnapshot3 = await getDocs(q3);
         console.log(
-          `✅ Consultas encontradas (lowercase): ${querySnapshot3.size}`
+          `✅ Exames encontrados (lowercase): ${querySnapshot3.size}`
         );
 
         querySnapshot3.forEach((doc) => {
-          if (!consultasFiltradas.find((c) => c.id === doc.id)) {
+          if (!examesFiltrados.find((e) => e.id === doc.id)) {
             const data = doc.data();
-            if (data.tipo?.toLowerCase() === "consulta") {
-              consultasFiltradas.push({
+            if (data.tipo?.toLowerCase() === "exame") {
+              examesFiltrados.push({
                 id: doc.id,
                 tipo: data.tipo,
                 nome: data.nome || "Sem nome",
@@ -159,7 +157,6 @@ export default function MinhasConsultas() {
                 membro: data.membro,
                 criado_por_email: data.criado_por_email,
                 membro_tipo: data.membro_tipo,
-                especialidade: data.especialidade || "Não informada",
                 ...data,
               });
             }
@@ -167,26 +164,24 @@ export default function MinhasConsultas() {
         });
 
         console.log("\n=== RESULTADO FINAL ===");
-        console.log(
-          `Total de consultas para exibição: ${consultasFiltradas.length}`
-        );
+        console.log(`Total de exames para exibição: ${examesFiltrados.length}`);
 
-        // Ordenar por data (mais próxima primeiro)
-        consultasFiltradas.sort((a, b) => {
+        // Ordenar por data (mais recente primeiro)
+        examesFiltrados.sort((a, b) => {
           try {
             const dateA = new Date(a.data.split("/").reverse().join("-"));
             const dateB = new Date(b.data.split("/").reverse().join("-"));
-            return dateA.getTime() - dateB.getTime(); // Ordem cronológica
+            return dateB.getTime() - dateA.getTime();
           } catch {
             return 0;
           }
         });
 
-        setConsultas(consultasFiltradas);
+        setExames(examesFiltrados);
         setDebugInfo(
           `Total na coleção: ${todosDados.length}\n` +
-            `Consultas encontradas: ${consultasFiltradas.length}\n` +
-            `Filtro: tipo = "Consulta"`
+            `Exames encontrados: ${examesFiltrados.length}\n` +
+            `Filtro: tipo = "Exame"`
         );
       } catch (error: any) {
         console.error("❌ ERRO CRÍTICO:", error);
@@ -196,10 +191,10 @@ export default function MinhasConsultas() {
       }
     };
 
-    fetchConsultas();
+    fetchExames();
   }, [currentUser]);
 
-  // Função para verificar se a consulta é para hoje
+  // Função para verificar se o exame é para hoje
   const isParaHoje = (dataString: string) => {
     try {
       const hoje = new Date().toLocaleDateString("pt-BR");
@@ -209,138 +204,71 @@ export default function MinhasConsultas() {
     }
   };
 
-  // Função para verificar se a consulta é próxima (próximos 3 dias)
-  const isProxima = (dataString: string) => {
-    try {
-      const hoje = new Date();
-      const dataConsulta = new Date(dataString.split("/").reverse().join("-"));
-      const diffTime = dataConsulta.getTime() - hoje.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      return diffDays > 0 && diffDays <= 3; // Próximos 3 dias
-    } catch {
-      return false;
-    }
-  };
-
-  // Renderizar a consulta
-  const renderConsulta = (consulta: any) => {
-    const hoje = isParaHoje(consulta.data);
-    const proxima = isProxima(consulta.data);
-
-    return (
-      <View
-        style={[
-          styles.consultaItem,
-          hoje && styles.consultaHoje,
-          proxima && styles.consultaProxima,
-        ]}
-      >
-        {/* Cabeçalho com tipo e status */}
-        <View style={styles.consultaHeader}>
-          <View style={styles.tipoContainer}>
-            <Ionicons name="medical-outline" size={20} color="#0A2C5E" />
-            <Text style={styles.tipo}>CONSULTA</Text>
-          </View>
-
-          {hoje && (
-            <View style={[styles.statusBadge, styles.hojeBadge]}>
-              <Ionicons name="alert-circle" size={14} color="#FF3B30" />
-              <Text style={styles.statusText}>HOJE</Text>
-            </View>
-          )}
-
-          {proxima && !hoje && (
-            <View style={[styles.statusBadge, styles.proximaBadge]}>
-              <Ionicons name="time-outline" size={14} color="#FF9500" />
-              <Text style={styles.statusText}>PRÓXIMA</Text>
-            </View>
-          )}
+  // Renderizar o exame
+  const renderExame = (exame: any) => (
+    <View
+      style={[styles.exameItem, isParaHoje(exame.data) && styles.exameHoje]}
+    >
+      {/* Cabeçalho com tipo e data */}
+      <View style={styles.exameHeader}>
+        <View style={styles.tipoContainer}>
+          <Ionicons name="flask-outline" size={20} color="#0A2C5E" />
+          <Text style={styles.tipo}>EXAME</Text>
         </View>
-
-        {/* Nome da consulta */}
-        <Text style={styles.nome}>{consulta.nome}</Text>
-
-        {/* Especialidade */}
-        {consulta.especialidade && (
-          <View style={styles.infoRow}>
-            <Ionicons name="star-outline" size={16} color="#666" />
-            <Text style={styles.info}>
-              Especialidade:{" "}
-              <Text style={styles.destaque}>{consulta.especialidade}</Text>
-            </Text>
-          </View>
-        )}
-
-        {/* Data e horário */}
-        <View style={styles.infoRow}>
-          <Ionicons name="calendar-outline" size={16} color="#666" />
-          <Text style={styles.data}>
-            {consulta.data} {consulta.horario ? `• ${consulta.horario}` : ""}
-          </Text>
-        </View>
-
-        {/* Informações do remetente */}
-        {consulta.criado_por_email && (
-          <View style={styles.infoRow}>
-            <Ionicons name="person-outline" size={16} color="#666" />
-            <Text style={styles.info}>
-              Agendada por: {consulta.criado_por_email}
-            </Text>
-          </View>
-        )}
-
-        {/* Destinatário (se for diferente do usuário) */}
-        {consulta.membro && (
-          <View style={styles.infoRow}>
-            <Ionicons name="people-outline" size={16} color="#666" />
-            <Text style={styles.info}>Para: {consulta.membro}</Text>
-          </View>
-        )}
-
-        {/* Médico/Profissional */}
-        {consulta.medico && (
-          <View style={styles.infoRow}>
-            <Ionicons name="person-circle-outline" size={16} color="#666" />
-            <Text style={styles.info}>
-              Médico: <Text style={styles.destaque}>{consulta.medico}</Text>
-            </Text>
-          </View>
-        )}
-
-        {/* Local/Clínica */}
-        {consulta.local && (
-          <View style={styles.infoRow}>
-            <Ionicons name="location-outline" size={16} color="#666" />
-            <Text style={styles.info}>
-              Local: <Text style={styles.destaque}>{consulta.local}</Text>
-            </Text>
-          </View>
-        )}
-
-        {/* Observações/Detalhes */}
-        {consulta.observacoes && (
-          <View style={styles.observacoesContainer}>
-            <Text style={styles.observacoesTitle}>Observações:</Text>
-            <Text style={styles.observacoesText}>{consulta.observacoes}</Text>
-          </View>
-        )}
-
-        {/* Telefone para confirmação */}
-        {consulta.telefone && (
-          <View style={styles.infoRow}>
-            <Ionicons name="call-outline" size={16} color="#666" />
-            <Text style={styles.info}>Telefone: {consulta.telefone}</Text>
+        {isParaHoje(exame.data) && (
+          <View style={styles.hojeBadge}>
+            <Ionicons name="alert-circle" size={14} color="#FF3B30" />
+            <Text style={styles.hojeText}>HOJE</Text>
           </View>
         )}
       </View>
-    );
-  };
 
-  // Calcular estatísticas
-  const consultasHoje = consultas.filter((c) => isParaHoje(c.data)).length;
-  const consultasProximas = consultas.filter(
-    (c) => isProxima(c.data) && !isParaHoje(c.data)
-  ).length;
+      {/* Nome do exame */}
+      <Text style={styles.nome}>{exame.nome}</Text>
+
+      {/* Data e horário */}
+      <View style={styles.infoRow}>
+        <Ionicons name="calendar-outline" size={16} color="#666" />
+        <Text style={styles.data}>
+          {exame.data} {exame.horario ? `• ${exame.horario}` : ""}
+        </Text>
+      </View>
+
+      {/* Informações do remetente */}
+      {exame.criado_por_email && (
+        <View style={styles.infoRow}>
+          <Ionicons name="person-outline" size={16} color="#666" />
+          <Text style={styles.info}>
+            Solicitado por: {exame.criado_por_email}
+          </Text>
+        </View>
+      )}
+
+      {/* Destinatário (se for diferente do usuário) */}
+      {exame.membro && (
+        <View style={styles.infoRow}>
+          <Ionicons name="people-outline" size={16} color="#666" />
+          <Text style={styles.info}>Para: {exame.membro}</Text>
+        </View>
+      )}
+
+      {/* Observações/Detalhes */}
+      {exame.observacoes && (
+        <View style={styles.observacoesContainer}>
+          <Text style={styles.observacoesTitle}>Observações:</Text>
+          <Text style={styles.observacoesText}>{exame.observacoes}</Text>
+        </View>
+      )}
+
+      {/* Local/Clínica */}
+      {exame.local && (
+        <View style={styles.infoRow}>
+          <Ionicons name="location-outline" size={16} color="#666" />
+          <Text style={styles.info}>Local: {exame.local}</Text>
+        </View>
+      )}
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -359,54 +287,49 @@ export default function MinhasConsultas() {
           <Text style={styles.userName}>{currentUser?.email}</Text>
         </View>
 
-        <Text style={styles.titulo}>Minhas Consultas</Text>
-        <Text style={styles.subtitulo}>Agenda médica e acompanhamento</Text>
+        <Text style={styles.titulo}>Meus Exames</Text>
+        <Text style={styles.subtitulo}>Histórico e agendamentos</Text>
       </View>
 
       {/* Conteúdo */}
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#0A2C5E" />
-          <Text style={styles.loadingText}>Buscando suas consultas...</Text>
+          <Text style={styles.loadingText}>Buscando seus exames...</Text>
         </View>
       ) : (
         <ScrollView
           style={styles.conteudo}
-          contentContainerStyle={styles.listaConsultas}
+          contentContainerStyle={styles.listaExames}
         >
-          {consultas.length > 0 ? (
+          {exames.length > 0 ? (
             <>
-              {/* Resumo estatístico */}
               <View style={styles.resumoContainer}>
                 <View style={styles.resumoItem}>
-                  <Ionicons name="medical" size={24} color="#0A2C5E" />
-                  <Text style={styles.resumoNumero}>{consultas.length}</Text>
-                  <Text style={styles.resumoTexto}>Total</Text>
+                  <Ionicons name="flask" size={24} color="#0A2C5E" />
+                  <Text style={styles.resumoNumero}>{exames.length}</Text>
+                  <Text style={styles.resumoTexto}>Exames</Text>
                 </View>
 
                 <View style={styles.resumoItem}>
                   <Ionicons name="today" size={24} color="#FF3B30" />
-                  <Text style={styles.resumoNumero}>{consultasHoje}</Text>
+                  <Text style={styles.resumoNumero}>
+                    {exames.filter((e) => isParaHoje(e.data)).length}
+                  </Text>
                   <Text style={styles.resumoTexto}>Hoje</Text>
-                </View>
-
-                <View style={styles.resumoItem}>
-                  <Ionicons name="calendar" size={24} color="#FF9500" />
-                  <Text style={styles.resumoNumero}>{consultasProximas}</Text>
-                  <Text style={styles.resumoTexto}>Próximas</Text>
                 </View>
               </View>
 
-              {consultas.map((consulta) => (
-                <View key={consulta.id}>{renderConsulta(consulta)}</View>
+              {exames.map((exame) => (
+                <View key={exame.id}>{renderExame(exame)}</View>
               ))}
             </>
           ) : (
-            <View style={styles.semConsultasContainer}>
-              <Ionicons name="medical-outline" size={80} color="#CCCCCC" />
-              <Text style={styles.semConsultas}>Nenhuma consulta agendada</Text>
-              <Text style={styles.semConsultasSub}>
-                Quando alguém agendar uma consulta para você, ela aparecerá aqui
+            <View style={styles.semExamesContainer}>
+              <Ionicons name="flask-outline" size={80} color="#CCCCCC" />
+              <Text style={styles.semExames}>Nenhum exame agendado</Text>
+              <Text style={styles.semExamesSub}>
+                Quando alguém agendar um exame para você, ele aparecerá aqui
               </Text>
 
               {/* Debug info */}
@@ -514,23 +437,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
   },
   resumoItem: {
     alignItems: "center",
     backgroundColor: "#F0F8FF",
     padding: 15,
     borderRadius: 10,
-    minWidth: 90,
+    minWidth: 100,
   },
   resumoNumero: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
     color: "#0A2C5E",
     marginTop: 5,
   },
   resumoTexto: {
-    fontSize: 11,
+    fontSize: 12,
     color: "#666",
     marginTop: 2,
   },
@@ -549,10 +472,10 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 70,
   },
-  listaConsultas: {
+  listaExames: {
     padding: 15,
   },
-  consultaItem: {
+  exameItem: {
     backgroundColor: "#FFFFFF",
     padding: 15,
     borderRadius: 10,
@@ -565,17 +488,12 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  consultaHoje: {
+  exameHoje: {
     borderLeftWidth: 4,
     borderLeftColor: "#FF3B30",
     backgroundColor: "#FFF5F5",
   },
-  consultaProxima: {
-    borderLeftWidth: 4,
-    borderLeftColor: "#FF9500",
-    backgroundColor: "#FFF9F0",
-  },
-  consultaHeader: {
+  exameHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -595,22 +513,18 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 4,
   },
-  statusBadge: {
+  hojeBadge: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#FFE5E5",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
   },
-  hojeBadge: {
-    backgroundColor: "#FFE5E5",
-  },
-  proximaBadge: {
-    backgroundColor: "#FFEBD6",
-  },
-  statusText: {
+  hojeText: {
     fontSize: 10,
     fontWeight: "bold",
+    color: "#FF3B30",
     marginLeft: 4,
   },
   nome: {
@@ -636,10 +550,6 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     flex: 1,
   },
-  destaque: {
-    fontWeight: "bold",
-    color: "#0A2C5E",
-  },
   observacoesContainer: {
     marginTop: 10,
     padding: 10,
@@ -659,18 +569,18 @@ const styles = StyleSheet.create({
     color: "#666",
     lineHeight: 18,
   },
-  semConsultasContainer: {
+  semExamesContainer: {
     alignItems: "center",
     padding: 40,
     marginTop: 20,
   },
-  semConsultas: {
+  semExames: {
     fontSize: 18,
     color: "#666",
     marginTop: 15,
     fontWeight: "500",
   },
-  semConsultasSub: {
+  semExamesSub: {
     fontSize: 14,
     color: "#999",
     marginTop: 10,

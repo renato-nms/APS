@@ -44,7 +44,7 @@ export default function HomeCrianca() {
 
         <TouchableOpacity
           style={[styles.button, styles.vacinasButton]}
-          onPress={() => handleButtonPress("Minhas gotinhas")}
+          onPress={() => router.push("./saudecrianca/vacinas")}
         >
           <Image
             source={require("../assets/images/Gota.png")}
@@ -55,7 +55,7 @@ export default function HomeCrianca() {
 
         <TouchableOpacity
           style={[styles.button, styles.remediosButton]}
-          onPress={() => handleButtonPress("Minhas vitaminas")}
+          onPress={() => router.push("./saudecrianca/remedios")}
         >
           <Image
             source={require("../assets/images/Vitamina.png")}
@@ -66,7 +66,7 @@ export default function HomeCrianca() {
 
         <TouchableOpacity
           style={[styles.button, styles.VisitasButton]}
-          onPress={() => handleButtonPress("Minhas visitas")}
+          onPress={() => router.push("./saudecrianca/exames")}
         >
           <Image
             source={require("../assets/images/Visita.png")}

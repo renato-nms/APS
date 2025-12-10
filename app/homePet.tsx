@@ -1,23 +1,150 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { router } from "expo-router";
+import React from "react";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ImageBackground,
+} from "react-native";
 
-export default function HomePet() {
+export default function HomeCrianca() {
+  const handleButtonPress = (tipo) => {
+    console.log(`Botão pressionado: ${tipo}`);
+    // aqui você pode adicionar navegação ou lógica
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bem-vindo ao HomePet</Text>
-    </View>
+    <ImageBackground
+      source={require("../assets/images/bg-crianca.png")}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <Image
+        source={require("../assets/images/logo.png")}
+        style={styles.logo}
+      />
+
+      <Text style={styles.title}>
+        Oi! Vamos brincar de cuidar da sua saúde?
+      </Text>
+
+      <View style={styles.buttonsGrid}>
+        <TouchableOpacity
+          style={[styles.button, styles.examesButton]}
+          onPress={() => router.push("./saudecrianca/consultas")}
+        >
+          <Image
+            source={require("../assets/images/Urso.png")}
+            style={styles.icone}
+          />
+          <Text style={styles.buttonText}>Exames</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.vacinasButton]}
+          onPress={() => router.push("./saudecrianca/vacinas")}
+        >
+          <Image
+            source={require("../assets/images/Gota.png")}
+            style={styles.icone}
+          />
+          <Text style={styles.buttonText}>Vacinas</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.remediosButton]}
+          onPress={() => router.push("./saudecrianca/remedios")}
+        >
+          <Image
+            source={require("../assets/images/Vitamina.png")}
+            style={styles.icone}
+          />
+          <Text style={styles.buttonText}>Remédios</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.VisitasButton]}
+          onPress={() => router.push("./saudecrianca/consultas")}
+        >
+          <Image
+            source={require("../assets/images/Visita.png")}
+            style={styles.icone}
+          />
+          <Text style={styles.buttonText}>Consultas</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    width: "100%",
+    height: "100%",
+  },
+  logo: {
+    width: 246,
+    height: 94,
+    marginTop: 23,
+    alignSelf: "center",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    color: "#000",
+    textAlign: "center",
+    marginVertical: 20,
+  },
+  buttonsGrid: {
+    flexDirection: "column",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginTop: 10,
+    marginBottom: 20,
+    backgroundColor: "transparent",
+  },
+  button: {
+    flexDirection: "row", // imagem + texto lado a lado
+    alignItems: "center",
+    justifyContent: "flex-start",
+    width: "100%",
+    maxWidth: 354,
+    height: 100,
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  icone: {
+    width: 60,
+    height: 60,
+    marginRight: 15, // espaço entre o urso e o texto
+  },
+  examesButton: {
+    backgroundColor: "#B8FDDE",
+  },
+  vacinasButton: {
+    backgroundColor: "#BFF5FF",
+  },
+  remediosButton: {
+    backgroundColor: "#EEDEFE",
+  },
+  consultasButton: {
+    backgroundColor: "#FFFDBE",
+  },
+  VisitasButton: {
+    backgroundColor: "#FFFDBE",
+  },
+  buttonText: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#0A2C5E",
   },
 });
