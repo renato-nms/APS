@@ -213,7 +213,7 @@ export default function Lembrete() {
             onPress={() => router.push("/AddLembrete")}
           >
             <Ionicons name="calendar-outline" size={24} color="#ffffff" />
-            <Text style={styles.textoBotaoAcao}>Agendar Evento</Text>
+            <Text style={styles.textoBotaoAcao}>Adicionar lembrete</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -221,7 +221,7 @@ export default function Lembrete() {
             onPress={() => router.push("./inputs/AddLembrete2")}
           >
             <Ionicons name="notifications-outline" size={24} color="#ffffff" />
-            <Text style={styles.textoBotaoAcao}>Adicionar Lembrete</Text>
+            <Text style={styles.textoBotaoAcao}>Agendar evento</Text>
           </TouchableOpacity>
         </View>
 
