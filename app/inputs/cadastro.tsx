@@ -25,6 +25,14 @@ export default function CadastroLider() {
   const [dataNascimento, setDataNascimento] = useState("");
   const [sexo, setSexo] = useState("");
 
+  // Opções fixas para sexo
+  const opcoesSexo = [
+    { id: "M", label: "Masculino" },
+    { id: "F", label: "Feminino" },
+    { id: "O", label: "Outro" },
+    { id: "P", label: "Prefiro não dizer" },
+  ];
+
   async function handleCadastro() {
     if (!nome || !email || !senha || !dataNascimento || !sexo) {
       Alert.alert("Erro", "Preencha todos os campos");
@@ -45,7 +53,7 @@ export default function CadastroLider() {
         sexo,
         email,
         uid,
-        tipoUsuario: "lider", // CAMPO ESSENCIAL ADICIONADO
+        tipoUsuario: "lider",
         criadoEm: new Date(),
       });
 
@@ -84,12 +92,33 @@ export default function CadastroLider() {
             value={dataNascimento}
             onChangeText={setDataNascimento}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Sexo"
-            value={sexo}
-            onChangeText={setSexo}
-          />
+
+          {/* Seção Sexo com botões/abas */}
+          <View style={styles.sexoSection}>
+            <Text style={styles.sexoLabel}>Sexo:</Text>
+            <View style={styles.sexoContainer}>
+              {opcoesSexo.map((opcao) => (
+                <TouchableOpacity
+                  key={opcao.id}
+                  style={[
+                    styles.sexoButton,
+                    sexo === opcao.id && styles.sexoButtonSelecionado,
+                  ]}
+                  onPress={() => setSexo(opcao.id)}
+                >
+                  <Text
+                    style={[
+                      styles.sexoButtonText,
+                      sexo === opcao.id && styles.sexoButtonTextSelecionado,
+                    ]}
+                  >
+                    {opcao.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
           <TextInput
             style={styles.input}
             placeholder="E-mail"
@@ -151,6 +180,49 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: "#ccc",
+    fontSize: 16,
+  },
+  // Estilos para a seção de sexo
+  sexoSection: {
+    marginBottom: 20,
+  },
+  sexoLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 10,
+    color: "#333",
+  },
+  sexoContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    gap: 8,
+  },
+  sexoButton: {
+    flex: 1,
+    minWidth: "48%", // Para ter 2 botões por linha
+    height: 50,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#ddd",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 5,
+  },
+  sexoButtonSelecionado: {
+    backgroundColor: "#0A2C5E",
+    borderColor: "#0A2C5E",
+  },
+  sexoButtonText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#666",
+    textAlign: "center",
+  },
+  sexoButtonTextSelecionado: {
+    color: "#fff",
+    fontWeight: "bold",
   },
   button: {
     width: "100%",
